@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>من سيربح المليون</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <div class="logo">من سيربح المليون</div>
+            <div class="current-prize">الرصيد الحالي: <span id="prize-money">0</span> ريال</div>
+        </header>
+
+        <main id="game-area">
+            <div class="question-box">
+                <h2 id="question-text">جاري تحميل السؤال...</h2>
+            </div>
+
+            <div class="answers-grid">
+                <button class="answer-btn" onclick="checkAnswer(0)"><span class="Letter">أ:</span> <span id="opt0">خيار 1</span></button>
+                <button class="answer-btn" onclick="checkAnswer(1)"><span class="Letter">ب:</span> <span id="opt1">خيار 2</span></button>
+                <button class="answer-btn" onclick="checkAnswer(2)"><span class="Letter">ج:</span> <span id="opt2">خيار 3</span></button>
+                <button class="answer-btn" onclick="checkAnswer(3)"><span class="Letter">د:</span> <span id="opt3">خيار 4</span></button>
+            </div>
+            
+             <div class="prize-ladder">
+                السؤال القادم: <span id="next-prize">100</span> ريال
+            </div>
+        </main>
+
+        <div id="end-screen" class="hidden">
+             <h2 id="end-message">انتهت اللعبة!</h2>
+             <p>لقد ربحت: <span id="final-score">0</span> ريال</p>
+             <button class="restart-btn" onclick="startGame()">لعب مرة أخرى</button>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
