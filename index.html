@@ -4,40 +4,235 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>من سيربح المليون</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* --- قسم التصميم (CSS) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            /* خلفية زرقاء داكنة تشبه الاستوديو */
+            background: radial-gradient(circle at center, #1a2a6c, #000000); 
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow: hidden;
+        }
+
+        .game-container {
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .logo-area {
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #0000ff; /* توهج حول الشعار */
+            border: 2px solid #fff;
+        }
+
+        /* تصميم صندوق السؤال */
+        .question-box {
+            background: linear-gradient(to bottom, #0d47a1, #000000);
+            border: 2px solid #ffffff;
+            border-radius: 50px;
+            padding: 20px 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 15px #00bcd4, inset 0 0 20px #000000;
+            position: relative;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* الخطوط الجانبية البيضاء (الزخرفة) */
+        .question-box::before, .question-box::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 100%; /* خط يمتد خلف الصندوق */
+            height: 1px;
+            background: rgba(255, 255, 255, 0.3);
+            z-index: -1;
+            left: 0;
+        }
+
+        #question-text {
+            margin: 0;
+            font-size: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        /* شبكة الأجوبة */
+        .answers-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* عمودين */
+            gap: 20px;
+        }
+
+        /* تصميم أزرار الإجابة */
+        .answer-btn {
+            background: linear-gradient(to bottom, #1565c0, #000000);
+            border: 2px solid #90caf9;
+            border-radius: 40px; /* تدوير الحواف مثل الصورة */
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 10px #0d47a1;
+            position: relative;
+        }
+
+        .answer-btn:hover {
+            background: linear-gradient(to bottom, #ff9800, #e65100); /* برتقالي عند اللمس */
+            border-color: #ffe0b2;
+        }
+
+        /* النقاط الجانبية (الشكل المعين) للأزرار */
+        .answer-btn::before, .answer-btn::after {
+            content: '◆'; 
+            color: #fff;
+            font-size: 10px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .answer-btn::before { left: 10px; }
+        .answer-btn::after { right: 10px; }
+
+        .answer-text-container {
+            width: 100%;
+            text-align: center;
+            padding: 0 15px;
+        }
+
+        .label {
+            color: #ffeb3b; /* لون أصفر للأرقام */
+            font-weight: bold;
+            float: right;
+        }
+
+        /* تنسيق للهاتف */
+        @media (max-width: 600px) {
+            .answers-grid {
+                grid-template-columns: 1fr;
+            }
+            #question-text {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
 </head>
 <body>
+
     <div class="game-container">
-        <header>
-            <div class="logo">من سيربح المليون</div>
-            <div class="current-prize">الرصيد الحالي: <span id="prize-money">0</span> ريال</div>
-        </header>
-
-        <main id="game-area">
-            <div class="question-box">
-                <h2 id="question-text">جاري تحميل السؤال...</h2>
-            </div>
-
-            <div class="answers-grid">
-                <button class="answer-btn" onclick="checkAnswer(0)"><span class="Letter">أ:</span> <span id="opt0">خيار 1</span></button>
-                <button class="answer-btn" onclick="checkAnswer(1)"><span class="Letter">ب:</span> <span id="opt1">خيار 2</span></button>
-                <button class="answer-btn" onclick="checkAnswer(2)"><span class="Letter">ج:</span> <span id="opt2">خيار 3</span></button>
-                <button class="answer-btn" onclick="checkAnswer(3)"><span class="Letter">د:</span> <span id="opt3">خيار 4</span></button>
-            </div>
-            
-             <div class="prize-ladder">
-                السؤال القادم: <span id="next-prize">100</span> ريال
-            </div>
-        </main>
-
-        <div id="end-screen" class="hidden">
-             <h2 id="end-message">انتهت اللعبة!</h2>
-             <p>لقد ربحت: <span id="final-score">0</span> ريال</p>
-             <button class="restart-btn" onclick="startGame()">لعب مرة أخرى</button>
+        <div class="logo-area">
+            <img src="https://upload.wikimedia.org/wikipedia/en/8/8c/Who_Wants_to_Be_a_Millionaire_generic_logo.png" alt="شعار" class="logo">
         </div>
 
+        <div class="question-box">
+            <h2 id="question-text">جاري تحميل السؤال...</h2>
+        </div>
+
+        <div class="answers-grid">
+            <div class="answer-btn" onclick="checkAnswer(1)">
+                <span class="label">1 :</span> <div class="answer-text-container" id="opt1">الخيار 1</div>
+            </div>
+            <div class="answer-btn" onclick="checkAnswer(2)">
+                <span class="label">2 :</span> <div class="answer-text-container" id="opt2">الخيار 2</div>
+            </div>
+            <div class="answer-btn" onclick="checkAnswer(3)">
+                <span class="label">3 :</span> <div class="answer-text-container" id="opt3">الخيار 3</div>
+            </div>
+            <div class="answer-btn" onclick="checkAnswer(4)">
+                <span class="label">4 :</span> <div class="answer-text-container" id="opt4">الخيار 4</div>
+            </div>
+        </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        /* --- قسم البرمجة (JavaScript) --- */
+        
+        // الأسئلة
+        const questions = [
+            {
+                question: "ما هي الدولة الأكثر تعدادا للسكان بينهم؟",
+                options: ["الولايات المتحدة", "ألمانيا", "اليابان", "الهند"],
+                answer: 4 
+            },
+            {
+                question: "ما هو الحيوان الذي يُلقب بملك الغابة؟",
+                options: ["النمر", "الفيل", "الأسد", "الزرافة"],
+                answer: 3
+            },
+            {
+                question: "كم عدد القارات في العالم؟",
+                options: ["5", "6", "7", "8"],
+                answer: 3
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+
+        function loadQuestion() {
+            const q = questions[currentQuestionIndex];
+            document.getElementById("question-text").innerText = q.question;
+            document.getElementById("opt1").innerText = q.options[0];
+            document.getElementById("opt2").innerText = q.options[1];
+            document.getElementById("opt3").innerText = q.options[2];
+            document.getElementById("opt4").innerText = q.options[3];
+            
+            // إعادة الألوان للوضع الطبيعي
+            const buttons = document.querySelectorAll('.answer-btn');
+            buttons.forEach(btn => {
+                btn.style.background = "linear-gradient(to bottom, #1565c0, #000000)";
+            });
+        }
+
+        function checkAnswer(selectedOption) {
+            const q = questions[currentQuestionIndex];
+            const buttons = document.querySelectorAll('.answer-btn');
+            const selectedBtn = buttons[selectedOption - 1];
+            
+            if (selectedOption === q.answer) {
+                // إجابة صحيحة (أخضر)
+                selectedBtn.style.background = "linear-gradient(to bottom, #00c853, #005005)";
+                // صوت بسيط (اختياري) يمكن إضافته هنا
+                
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    if (currentQuestionIndex < questions.length) {
+                        loadQuestion();
+                    } else {
+                        alert("مبروك! أنت مليونير (افتراضياً)!");
+                        currentQuestionIndex = 0;
+                        loadQuestion();
+                    }
+                }, 1000);
+            } else {
+                // إجابة خاطئة (أحمر)
+                selectedBtn.style.background = "linear-gradient(to bottom, #d50000, #5a0000)";
+                alert("للأسف إجابة خاطئة! سنعيد اللعبة.");
+                currentQuestionIndex = 0;
+                loadQuestion();
+            }
+        }
+
+        // تشغيل اللعبة
+        loadQuestion();
+    </script>
 </body>
 </html>
