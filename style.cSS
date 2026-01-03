@@ -1,0 +1,110 @@
+/* إعدادات عامة */
+body {
+    font-family: Tahoma, Arial, sans-serif;
+    background: radial-gradient(circle, #1a1a40 0%, #0d0d20 100%); /* خلفية زرقاء داكنة متدرجة */
+    color: #ffffff;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* حاوية اللعبة */
+.game-container {
+    max-width: 600px;
+    margin: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* خلفية شفافة */
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid #cfb53b; /* إطار ذهبي */
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #cfb53b; /* لون ذهبي */
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px #000;
+}
+
+.current-prize {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #4CAF50;
+}
+
+/* صندوق السؤال */
+.question-box {
+    background: linear-gradient(to bottom, #2c3e50, #1a1a2e);
+    padding: 20px;
+    border-radius: 10px;
+    border: 3px solid #cfb53b;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+
+#question-text {
+    margin: 0;
+    font-size: 20px;
+}
+
+/* شبكة الأجوبة */
+.answers-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* عمود واحد للهواتف */
+    gap: 15px;
+}
+
+/* أزرار الإجابة */
+.answer-btn {
+    background: linear-gradient(to bottom, #141e30, #243b55);
+    border: 2px solid #5a7c9b;
+    color: white;
+    padding: 15px;
+    font-size: 18px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: right;
+}
+
+.Letter {
+    color: #cfb53b;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+/* تأثيرات عند الضغط */
+.answer-btn:hover, .answer-btn:active {
+    background: #cfb53b;
+    color: #000;
+    border-color: #fff;
+}
+
+.correct { background: #28a745 !important; color: white; }
+.wrong { background: #dc3545 !important; color: white; }
+
+/* سلم الجوائز والنهاية */
+.prize-ladder { margin-top: 20px; font-size: 14px; color: #aaa; }
+.hidden { display: none; }
+#end-screen {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.9);
+    padding: 30px; border-radius: 10px; border: 3px solid #cfb53b;
+    width: 80%;
+}
+.restart-btn {
+    margin-top: 20px; padding: 10px 20px;
+    background: #cfb53b; border: none; font-size: 18px; font-weight: bold; cursor: pointer;
+}
