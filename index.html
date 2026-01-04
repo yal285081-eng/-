@@ -2,237 +2,208 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>من سيربح المليون</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>الهاتف المفقود</title>
     <style>
-        /* --- قسم التصميم (CSS) --- */
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
-
+        /* تصميم الهاتف العام */
         body {
             margin: 0;
-            padding: 0;
-            font-family: 'Cairo', sans-serif;
-            /* خلفية زرقاء داكنة تشبه الاستوديو */
-            background: radial-gradient(circle at center, #1a2a6c, #000000); 
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden; /* لمنع السحب */
             color: white;
-            overflow: hidden;
         }
 
-        .game-container {
-            width: 90%;
-            max-width: 800px;
-            text-align: center;
-        }
-
-        .logo-area {
-            margin-bottom: 20px;
-        }
-
-        .logo {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            box-shadow: 0 0 20px #0000ff; /* توهج حول الشعار */
-            border: 2px solid #fff;
-        }
-
-        /* تصميم صندوق السؤال */
-        .question-box {
-            background: linear-gradient(to bottom, #0d47a1, #000000);
-            border: 2px solid #ffffff;
-            border-radius: 50px;
-            padding: 20px 40px;
-            margin-bottom: 30px;
-            box-shadow: 0 0 15px #00bcd4, inset 0 0 20px #000000;
-            position: relative;
-            min-height: 80px;
+        /* شاشة الهاتف */
+        #phone-screen {
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1516550893885-3e2842c5567a?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80');
+            background-size: cover;
+            background-position: center;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
+            position: relative;
         }
 
-        /* الخطوط الجانبية البيضاء (الزخرفة) */
-        .question-box::before, .question-box::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 100%; /* خط يمتد خلف الصندوق */
-            height: 1px;
-            background: rgba(255, 255, 255, 0.3);
-            z-index: -1;
-            left: 0;
-        }
-
-        #question-text {
-            margin: 0;
-            font-size: 1.5rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-        }
-
-        /* شبكة الأجوبة */
-        .answers-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* عمودين */
-            gap: 20px;
-        }
-
-        /* تصميم أزرار الإجابة */
-        .answer-btn {
-            background: linear-gradient(to bottom, #1565c0, #000000);
-            border: 2px solid #90caf9;
-            border-radius: 40px; /* تدوير الحواف مثل الصورة */
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: all 0.2s ease;
+        /* شريط الحالة (الساعة والبطارية) */
+        .status-bar {
+            width: 90%;
+            height: 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 0 10px #0d47a1;
-            position: relative;
-        }
-
-        .answer-btn:hover {
-            background: linear-gradient(to bottom, #ff9800, #e65100); /* برتقالي عند اللمس */
-            border-color: #ffe0b2;
-        }
-
-        /* النقاط الجانبية (الشكل المعين) للأزرار */
-        .answer-btn::before, .answer-btn::after {
-            content: '◆'; 
-            color: #fff;
-            font-size: 10px;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        .answer-btn::before { left: 10px; }
-        .answer-btn::after { right: 10px; }
-
-        .answer-text-container {
-            width: 100%;
-            text-align: center;
-            padding: 0 15px;
-        }
-
-        .label {
-            color: #ffeb3b; /* لون أصفر للأرقام */
+            font-size: 14px;
+            margin-top: 10px;
             font-weight: bold;
-            float: right;
         }
 
-        /* تنسيق للهاتف */
-        @media (max-width: 600px) {
-            .answers-grid {
-                grid-template-columns: 1fr;
-            }
-            #question-text {
-                font-size: 1.1rem;
-            }
+        /* شبكة التطبيقات */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 50px;
+            width: 90%;
+        }
+
+        /* تصميم الأيقونة */
+        .app-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        
+        .app-icon:active {
+            transform: scale(0.9);
+        }
+
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            margin-bottom: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        /* ألوان التطبيقات */
+        .msg-app { background: linear-gradient(45deg, #1bd441, #139c30); }
+        .photo-app { background: linear-gradient(45deg, #eecda3, #ef629f); }
+        .notes-app { background: linear-gradient(45deg, #fce38a, #f38181); }
+        .lock-app { background: linear-gradient(45deg, #30cfd0, #330867); }
+
+        /* شاشة التطبيق المفتوح (مخفية بالبداية) */
+        .opened-app {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            color: black;
+            display: none; /* مخفي */
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .app-header {
+            background-color: #f1f1f1;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: #007aff;
+        }
+
+        .app-content {
+            padding: 20px;
+            flex-grow: 1;
+            overflow-y: auto;
         }
     </style>
 </head>
 <body>
 
-    <div class="game-container">
-        <div class="logo-area">
-            <img src="https://upload.wikimedia.org/wikipedia/en/8/8c/Who_Wants_to_Be_a_Millionaire_generic_logo.png" alt="شعار" class="logo">
+    <div id="phone-screen">
+        <div class="status-bar">
+            <span id="clock">12:00</span>
+            <span>LTE 🔋 80%</span>
         </div>
 
-        <div class="question-box">
-            <h2 id="question-text">جاري تحميل السؤال...</h2>
-        </div>
+        <div class="app-grid">
+            <div class="app-icon" onclick="openApp('messages')">
+                <div class="icon-box msg-app">💬</div>
+                <span>الرسائل</span>
+            </div>
 
-        <div class="answers-grid">
-            <div class="answer-btn" onclick="checkAnswer(1)">
-                <span class="label">1 :</span> <div class="answer-text-container" id="opt1">الخيار 1</div>
+            <div class="app-icon" onclick="openApp('photos')">
+                <div class="icon-box photo-app">🖼️</div>
+                <span>الصور</span>
             </div>
-            <div class="answer-btn" onclick="checkAnswer(2)">
-                <span class="label">2 :</span> <div class="answer-text-container" id="opt2">الخيار 2</div>
-            </div>
-            <div class="answer-btn" onclick="checkAnswer(3)">
-                <span class="label">3 :</span> <div class="answer-text-container" id="opt3">الخيار 3</div>
-            </div>
-            <div class="answer-btn" onclick="checkAnswer(4)">
-                <span class="label">4 :</span> <div class="answer-text-container" id="opt4">الخيار 4</div>
+
+            <div class="app-icon" onclick="openApp('notes')">
+                <div class="icon-box notes-app">📝</div>
+                <span>ملاحظات</span>
             </div>
         </div>
     </div>
 
+    <div id="messages-app" class="opened-app">
+        <div class="app-header">
+            <button class="back-btn" onclick="closeApp('messages')">❮ رجوع</button>
+            <h3 style="margin:0; flex-grow:1; text-align:center;">المحادثات</h3>
+        </div>
+        <div class="app-content">
+            <div style="border-bottom:1px solid #eee; padding:10px;">
+                <strong>أمي ❤️</strong><br>
+                <span style="color:gray; font-size:12px;">وينك؟ ليش ما ترد؟</span>
+            </div>
+            <div style="border-bottom:1px solid #eee; padding:10px;">
+                <strong>المجهول</strong><br>
+                <span style="color:gray; font-size:12px;">شفتك اليوم بالمكان القديم...</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="photos-app" class="opened-app">
+        <div class="app-header">
+            <button class="back-btn" onclick="closeApp('photos')">❮ رجوع</button>
+            <h3 style="margin:0; flex-grow:1; text-align:center;">المعرض</h3>
+        </div>
+        <div class="app-content" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div style="height:100px; background:#ddd;"></div>
+            <div style="height:100px; background:#bbb;"></div>
+            <div style="height:100px; background:#999;"></div>
+            <div style="height:100px; background:black; color:white; display:flex; justify-content:center; align-items:center;">دليل؟</div>
+        </div>
+    </div>
+
+    <div id="notes-app" class="opened-app">
+        <div class="app-header">
+            <button class="back-btn" onclick="closeApp('notes')">❮ رجوع</button>
+            <h3 style="margin:0; flex-grow:1; text-align:center;">ملاحظاتي</h3>
+        </div>
+        <div class="app-content">
+            <p>كلمة سر الخزنة هي تاريخ ميلاد...</p>
+        </div>
+    </div>
+
     <script>
-        /* --- قسم البرمجة (JavaScript) --- */
-        
-        // الأسئلة
-        const questions = [
-            {
-                question: "ما هي الدولة الأكثر تعدادا للسكان بينهم؟",
-                options: ["الولايات المتحدة", "ألمانيا", "اليابان", "الهند"],
-                answer: 4 
-            },
-            {
-                question: "ما هو الحيوان الذي يُلقب بملك الغابة؟",
-                options: ["النمر", "الفيل", "الأسد", "الزرافة"],
-                answer: 3
-            },
-            {
-                question: "كم عدد القارات في العالم؟",
-                options: ["5", "6", "7", "8"],
-                answer: 3
-            }
-        ];
+        // تحديث الساعة
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('clock').innerText = hours + ':' + minutes;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
 
-        let currentQuestionIndex = 0;
-
-        function loadQuestion() {
-            const q = questions[currentQuestionIndex];
-            document.getElementById("question-text").innerText = q.question;
-            document.getElementById("opt1").innerText = q.options[0];
-            document.getElementById("opt2").innerText = q.options[1];
-            document.getElementById("opt3").innerText = q.options[2];
-            document.getElementById("opt4").innerText = q.options[3];
-            
-            // إعادة الألوان للوضع الطبيعي
-            const buttons = document.querySelectorAll('.answer-btn');
-            buttons.forEach(btn => {
-                btn.style.background = "linear-gradient(to bottom, #1565c0, #000000)";
-            });
+        // فتح التطبيق
+        function openApp(appName) {
+            document.getElementById(appName + '-app').style.display = 'flex';
         }
 
-        function checkAnswer(selectedOption) {
-            const q = questions[currentQuestionIndex];
-            const buttons = document.querySelectorAll('.answer-btn');
-            const selectedBtn = buttons[selectedOption - 1];
-            
-            if (selectedOption === q.answer) {
-                // إجابة صحيحة (أخضر)
-                selectedBtn.style.background = "linear-gradient(to bottom, #00c853, #005005)";
-                // صوت بسيط (اختياري) يمكن إضافته هنا
-                
-                setTimeout(() => {
-                    currentQuestionIndex++;
-                    if (currentQuestionIndex < questions.length) {
-                        loadQuestion();
-                    } else {
-                        alert("مبروك! أنت مليونير (افتراضياً)!");
-                        currentQuestionIndex = 0;
-                        loadQuestion();
-                    }
-                }, 1000);
-            } else {
-                // إجابة خاطئة (أحمر)
-                selectedBtn.style.background = "linear-gradient(to bottom, #d50000, #5a0000)";
-                alert("للأسف إجابة خاطئة! سنعيد اللعبة.");
-                currentQuestionIndex = 0;
-                loadQuestion();
-            }
+        // إغلاق التطبيق
+        function closeApp(appName) {
+            document.getElementById(appName + '-app').style.display = 'none';
         }
-
-        // تشغيل اللعبة
-        loadQuestion();
     </script>
+
 </body>
 </html>
