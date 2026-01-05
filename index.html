@@ -3,498 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tecno HiOS Ultimate</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>لغز هاتف سامر المفقود</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* --- 1. إعدادات النظام الأساسية --- */
-        :root {
-            --primary-color: #007aff;
-            --tecno-blue: #102646;
-            --screen-bg: #000;
-        }
-
+        /* --- الأساسيات --- */
+        :root { --primary: #007aff; --bg: #111; --text: #fff; }
         * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; font-family: 'Segoe UI', sans-serif; }
-        
-        body { margin: 0; padding: 0; background-color: #1a1a1a; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        body { margin: 0; padding: 0; background: #050505; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 
-        /* هيكل الهاتف */
-        .phone-frame {
-            width: 360px;
-            height: 760px;
-            background: black;
-            border-radius: 35px;
-            border: 6px solid #2d2d2d;
-            box-shadow: 0 0 60px rgba(0,0,0,0.6), inset 0 0 10px rgba(255,255,255,0.1);
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s;
+        /* --- الهاتف --- */
+        .phone {
+            width: 360px; height: 780px; background: #000; border-radius: 40px;
+            border: 6px solid #222; box-shadow: 0 0 60px rgba(0,100,255,0.1);
+            position: relative; overflow: hidden;
         }
-
-        /* النوتش والكاميرا */
         .notch {
-            position: absolute;
-            top: 0; left: 50%; transform: translateX(-50%);
-            width: 150px; height: 25px;
-            background: black;
-            border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;
-            z-index: 1000;
-        }
-        .front-cam {
-            position: absolute; top: 5px; left: 50%; transform: translateX(-50%);
-            width: 12px; height: 12px; background: #111; border-radius: 50%; border: 2px solid #333;
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 140px; height: 28px; background: #000;
+            border-bottom-left-radius: 18px; border-bottom-right-radius: 18px; z-index: 9999;
         }
 
-        /* --- 2. الشاشات والطبقات --- */
-        .screen-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: none; flex-direction: column;
-            overflow: hidden;
-        }
-
-        /* شاشة الإقلاع (Boot) */
-        #boot-screen {
-            background-color: white;
-            display: flex; justify-content: center; align-items: center; z-index: 2000;
-        }
-        .tecno-logo {
-            font-size: 40px; font-weight: 900; color: #0044cc; letter-spacing: 2px;
-            animation: pulse 2s infinite;
+        /* --- الشاشات --- */
+        .screen {
+            width: 100%; height: 100%; position: absolute; top: 0; left: 0;
+            display: none; flex-direction: column; background-size: cover; background-position: center;
         }
 
         /* شاشة القفل */
         #lock-screen {
-            background: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800&q=80') center/cover;
-            z-index: 900; display: flex;
-            color: white; text-align: center; justify-content: space-between; padding-top: 80px; padding-bottom: 40px;
-            backdrop-filter: brightness(0.8);
+            background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800');
+            display: flex; color: white; text-align: center; z-index: 500;
+        }
+        .pass-input {
+            width: 80%; padding: 15px; font-size: 20px; text-align: center; margin-top: 20px;
+            border-radius: 10px; border: none; background: rgba(255,255,255,0.2); color: white; outline: none;
         }
 
         /* الشاشة الرئيسية */
         #home-screen {
-            background: url('https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&q=80') center/cover;
-            z-index: 100; display: flex;
+            background-image: url('https://images.unsplash.com/photo-1480796927426-f609979314bd?w=800');
+            z-index: 100;
         }
 
-        /* --- 3. شريط الإشعارات (الستارة) --- */
-        #notification-panel {
-            position: absolute; top: -100%; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 1100; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 40px 20px; color: white;
-            backdrop-filter: blur(10px);
+        /* --- التطبيقات والأيقونات --- */
+        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; margin-top: 30px; }
+        .app-icon {
+            width: 60px; height: 60px; border-radius: 15px; display: flex; justify-content: center; align-items: center;
+            font-size: 28px; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.3); margin-bottom: 5px; cursor: pointer; transition: 0.1s;
         }
-        .quick-settings {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
-            margin-bottom: 30px;
+        .app-icon:active { transform: scale(0.9); }
+        .label { font-size: 11px; color: white; text-shadow: 0 1px 2px black; text-align: center; }
+        .badge {
+            position: absolute; top: -5px; right: -5px; background: red; color: white; font-size: 10px;
+            width: 20px; height: 20px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
         }
-        .qs-icon {
-            width: 50px; height: 50px; background: #333; border-radius: 50%;
-            display: flex; justify-content: center; align-items: center; font-size: 20px;
-            transition: 0.2s; cursor: pointer;
-        }
-        .qs-active { background: #007aff; color: white; }
 
-        /* --- 4. التطبيقات --- */
+        /* --- النوافذ الداخلية --- */
         .app-window {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: white; z-index: 500;
-            display: none; flex-direction: column;
-            animation: slideUp 0.3s ease;
+            background: #f2f2f2; z-index: 600; display: none; flex-direction: column;
+            animation: slideUp 0.3s;
         }
-
-        /* تصميم الأيقونات */
-        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; margin-top: 20px; }
-        .app-icon-wrapper { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        .app-icon-wrapper:active { transform: scale(0.9); }
-        .app-icon {
-            width: 60px; height: 60px; border-radius: 18px;
-            display: flex; justify-content: center; align-items: center; font-size: 28px;
-            color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            margin-bottom: 5px;
+        .app-header {
+            background: white; padding: 15px; padding-top: 40px; display: flex; align-items: center; gap: 10px;
+            font-weight: bold; border-bottom: 1px solid #ddd;
         }
-        
-        /* شريط السفلي (Dock) */
-        .dock {
-            margin-top: auto; margin-bottom: 15px; width: 90%; align-self: center;
-            background: rgba(255,255,255,0.2); backdrop-filter: blur(10px);
-            border-radius: 25px; padding: 10px;
-            display: flex; justify-content: space-around;
+        .app-content { flex-grow: 1; overflow-y: auto; padding: 15px; }
+
+        /* شاشة الاتصال المرعبة */
+        #incoming-call {
+            background: linear-gradient(to bottom, #2c3e50, #000); color: white;
+            z-index: 9000; display: none; align-items: center; justify-content: center; flex-direction: column;
         }
+        .caller-img { width: 100px; height: 100px; background: #555; border-radius: 50%; margin-bottom: 20px; display:flex; justify-content:center; align-items:center; font-size:40px;}
+        .call-actions { display: flex; gap: 50px; margin-top: 50px; }
+        .call-btn { width: 70px; height: 70px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 30px; color: white; cursor: pointer; animation: pulse 1s infinite; }
 
-        /* --- 5. تطبيقات محددة --- */
-        
-        /* متصفح الإنترنت */
-        .browser-bar { padding: 10px; background: #f1f1f1; display: flex; gap: 10px; align-items: center; border-bottom: 1px solid #ccc; }
-        .url-input { flex-grow: 1; padding: 8px; border-radius: 20px; border: 1px solid #ddd; outline: none; }
-        .browser-content { flex-grow: 1; padding: 20px; overflow-y: auto; background: white; }
-        .search-result { margin-bottom: 15px; }
-        .search-link { color: #1a0dab; font-size: 18px; text-decoration: none; display: block; margin-bottom: 2px;}
-        .search-desc { color: #545454; font-size: 14px; }
+        /* معرض الصور */
+        .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+        .photo-thumb { height: 100px; background: #333; cursor: pointer; position: relative; overflow: hidden; }
+        .photo-full { position: absolute; top:0; left:0; width:100%; height:100%; background:black; z-index:2000; display:none; justify-content:center; align-items:center; flex-direction:column;}
 
-        /* الكاميرا */
-        #camera-video { width: 100%; height: 100%; object-fit: cover; background: #000; }
-        .cam-controls {
-            position: absolute; bottom: 80px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 30px;
-        }
-        .shutter-btn { width: 70px; height: 70px; border-radius: 50%; border: 4px solid white; background: transparent; }
-        .shutter-btn:active { background: white; }
+        /* الرسائل */
+        .msg-bubble { padding: 10px 15px; border-radius: 20px; margin-bottom: 10px; max-width: 80%; font-size: 14px; position: relative; }
+        .msg-in { background: white; align-self: flex-start; border-bottom-right-radius: 2px; }
+        .msg-out { background: #dcf8c6; align-self: flex-end; border-bottom-left-radius: 2px; }
 
-        /* الآلة الحاسبة */
-        .calc-display { background: #222; color: white; font-size: 50px; padding: 20px; text-align: right; height: 150px; display: flex; align-items: flex-end; justify-content: flex-end;}
-        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); height: 100%; }
-        .calc-btn { background: #333; color: white; font-size: 24px; border: 0.5px solid #444; cursor: pointer; }
-        .calc-btn.orange { background: #f59e0b; }
-        .calc-btn:active { opacity: 0.7; }
+        /* الملفات السرية */
+        .secret-file { padding: 15px; background: #ffdede; border: 1px solid red; border-radius: 8px; color: red; text-align: center; margin-top: 20px; cursor: pointer; }
 
-        /* شريط التنقل السفلي */
-        .nav-bar {
-            height: 45px; background: black; display: flex; justify-content: space-around; align-items: center; color: #aaa; font-size: 20px; z-index: 2000;
-        }
-        .nav-btn:active { color: white; }
+        /* تشويش الشاشة */
+        .glitch { animation: shake 0.5s; filter: hue-rotate(90deg); }
 
-        /* --- Animations --- */
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(3px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(1px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
 
     </style>
 </head>
 <body>
 
-<div class="phone-frame">
-    <div class="notch"><div class="front-cam"></div></div>
+<div class="phone" id="phone-frame">
+    <div class="notch"></div>
 
-    <div id="boot-screen" class="screen-layer" style="display: flex;">
-        <div class="tecno-logo">TECNO</div>
-        <div style="position: absolute; bottom: 50px; font-size: 12px; color: gray;">Powered by Android</div>
+    <div id="lock-screen" class="screen">
+        <div style="margin-top: 80px;">
+            <h1 style="font-size: 60px; font-weight: 200;">10:24</h1>
+            <p>الجمعة، 13 أكتوبر</p>
+            <div style="margin-top: 50px; background: rgba(0,0,0,0.5); padding: 20px; border-radius: 15px; width: 80%; margin-left: auto; margin-right: auto;">
+                <i class="fas fa-lock"></i>
+                <p>الهاتف مقفل</p>
+                <input type="password" id="pass-code" class="pass-input" placeholder="أدخل الرمز" maxlength="4">
+                <button onclick="checkPass()" style="margin-top: 10px; padding: 10px 20px; border-radius: 20px; border: none; background: #007aff; color: white;">فتح</button>
+                <p style="font-size: 10px; margin-top: 10px; color: #ccc;">تلميح: الرمز هو سنة ميلاد سامر (ابحث في الصور)</p>
+            </div>
+        </div>
     </div>
 
-    <div id="lock-screen" class="screen-layer">
-        <div style="margin-top: 40px;">
-            <div style="font-size: 60px; font-weight: 200;" id="lock-clock">12:00</div>
-            <div id="lock-date">الاثنين 5 أكتوبر</div>
+    <div id="home-screen" class="screen">
+        <div style="padding: 20px; color: white; padding-top: 40px;">
+            <div style="display: flex; justify-content: space-between;">
+                <span>Tecno LTE</span>
+                <span>🔋 14%</span>
+            </div>
         </div>
         
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer;" onclick="unlockPhone()">
-            <i class="fas fa-lock" style="font-size: 20px;"></i>
-            <span style="font-size: 12px; opacity: 0.8;">اسحب للأعلى لفتح القفل</span>
-            <div style="width: 40px; height: 4px; background: white; border-radius: 2px;"></div>
-        </div>
-    </div>
-
-    <div id="notification-panel">
-        <div style="text-align: right; margin-bottom: 20px; font-size: 24px;" id="panel-clock">12:00</div>
-        <div class="quick-settings">
-            <div class="qs-icon qs-active" onclick="toggleQS(this)"><i class="fas fa-wifi"></i></div>
-            <div class="qs-icon qs-active" onclick="toggleQS(this)"><i class="fab fa-bluetooth-b"></i></div>
-            <div class="qs-icon" onclick="toggleQS(this)"><i class="fas fa-plane"></i></div>
-            <div class="qs-icon" onclick="toggleQS(this)"><i class="fas fa-flashlight"></i></div>
-        </div>
-        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 15px; margin-bottom: 10px;">
-            <div style="font-size: 12px; color: #aaa;">تطبيق الرسائل • الآن</div>
-            <div style="font-weight: bold;">المجهول</div>
-            <div>لا تنسى الرمز...</div>
-        </div>
-        <div style="text-align: center; margin-top: 20px; color: #aaa;" onclick="pullUpPanel()">▲ اسحب للإغلاق</div>
-    </div>
-
-    <div id="home-screen" class="screen-layer">
-        <div style="height: 30px; display: flex; justify-content: space-between; padding: 5px 20px; color: white; font-size: 12px; width: 100%;">
-            <span id="status-clock">12:00</span>
-            <span>📶 85% 🔋</span>
-        </div>
-
-        <div style="padding: 20px; color: white; text-align: center; margin-top: 20px;">
-            <div style="font-size: 40px; text-shadow: 0 2px 5px rgba(0,0,0,0.5);" id="home-clock">12:00</div>
-            <div style="text-shadow: 0 2px 5px rgba(0,0,0,0.5);">بغداد | 32°C ☀️</div>
-        </div>
-
         <div class="app-grid">
-            <div class="app-icon-wrapper" onclick="openApp('browser')">
-                <div class="app-icon" style="background: linear-gradient(135deg, #4285f4, #2b62b6);"><i class="fas fa-globe"></i></div>
-                <span style="color:white; font-size:11px;">المتصفح</span>
+            <div onclick="openApp('gallery')">
+                <div class="app-icon" style="background: linear-gradient(45deg, #ff9a9e, #fad0c4);"><i class="fas fa-images"></i></div>
+                <div class="label">الصور</div>
             </div>
-            <div class="app-icon-wrapper" onclick="openApp('camera')">
-                <div class="app-icon" style="background: linear-gradient(135deg, #555, #333);"><i class="fas fa-camera"></i></div>
-                <span style="color:white; font-size:11px;">الكاميرا</span>
+            <div onclick="openApp('messages')">
+                <div class="app-icon" style="background: linear-gradient(45deg, #a18cd1, #fbc2eb); position: relative;">
+                    <i class="fas fa-comment-dots"></i>
+                    <div class="badge">3</div>
+                </div>
+                <div class="label">الرسائل</div>
             </div>
-            <div class="app-icon-wrapper" onclick="openApp('calculator')">
-                <div class="app-icon" style="background: linear-gradient(135deg, #f0932b, #b36b1d);"><i class="fas fa-calculator"></i></div>
-                <span style="color:white; font-size:11px;">الحاسبة</span>
+            <div onclick="openApp('notes')">
+                <div class="app-icon" style="background: #f6d365;"><i class="fas fa-sticky-note"></i></div>
+                <div class="label">مذكراتي</div>
             </div>
-             <div class="app-icon-wrapper" onclick="openApp('settings')">
-                <div class="app-icon" style="background: linear-gradient(135deg, #636e72, #2d3436);"><i class="fas fa-cog"></i></div>
-                <span style="color:white; font-size:11px;">الإعدادات</span>
+            <div onclick="openApp('voice')">
+                <div class="app-icon" style="background: #ff512f;"><i class="fas fa-microphone-alt"></i></div>
+                <div class="label">تسجيلات</div>
+            </div>
+            <div onclick="openApp('files')">
+                <div class="app-icon" style="background: #434343;"><i class="fas fa-folder-lock"></i></div>
+                <div class="label">سري للغاية</div>
+            </div>
+            <div onclick="openApp('settings')">
+                <div class="app-icon" style="background: #555;"><i class="fas fa-cog"></i></div>
+                <div class="label">الإعدادات</div>
             </div>
         </div>
 
-        <div class="dock">
-            <div class="app-icon-wrapper" onclick="openApp('dialer')">
-                <div class="app-icon" style="width: 50px; height: 50px; background: #2ecc71; font-size: 22px;"><i class="fas fa-phone"></i></div>
-            </div>
-            <div class="app-icon-wrapper" onclick="openApp('messages')">
-                <div class="app-icon" style="width: 50px; height: 50px; background: #007aff; font-size: 22px;"><i class="fas fa-comment"></i></div>
-            </div>
-            <div class="app-icon-wrapper" onclick="openApp('music')">
-                <div class="app-icon" style="width: 50px; height: 50px; background: #e056fd; font-size: 22px;"><i class="fas fa-music"></i></div>
-            </div>
+        <div style="position: absolute; bottom: 20px; width: 90%; left: 5%; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border-radius: 25px; padding: 10px; display: flex; justify-content: space-around;">
+            <div class="app-icon" style="width: 45px; height: 45px; background: #2ecc71; margin: 0;"><i class="fas fa-phone"></i></div>
+            <div class="app-icon" style="width: 45px; height: 45px; background: #3498db; margin: 0;"><i class="fas fa-globe"></i></div>
+            <div class="app-icon" style="width: 45px; height: 45px; background: #9b59b6; margin: 0;"><i class="fas fa-camera"></i></div>
         </div>
     </div>
 
-    <div id="app-browser" class="app-window">
-        <div class="browser-bar">
-            <i class="fas fa-home" style="color:#555;" onclick="goHomeBrowser()"></i>
-            <input type="text" class="url-input" id="browser-url" placeholder="ابحث أو أدخل عنوان URL" onkeypress="handleSearch(event)">
-            <i class="fas fa-search" style="color:#555;"></i>
+    <div id="incoming-call" class="screen">
+        <div style="margin-top: 100px; text-align: center;">
+            <div class="caller-img">🕵️</div>
+            <h2 style="font-size: 30px; margin-bottom: 5px;">رقم مجهول</h2>
+            <p>يتصل بك...</p>
         </div>
-        <div class="browser-content" id="browser-body">
-            <div style="display:flex; flex-direction:column; align-items:center; margin-top:50px;">
-                <h1 style="color:#4285f4; font-size:40px;">G<span style="color:#ea4335">o</span><span style="color:#fbbc05">o</span><span style="color:#4285f4">g</span><span style="color:#34a853">l</span><span style="color:#ea4335">e</span></h1>
-                <p style="color:gray;">ابحث في الويب...</p>
+        <div class="call-actions">
+            <div class="call-btn" style="background: #e74c3c;" onclick="rejectCall()"><i class="fas fa-phone-slash"></i></div>
+            <div class="call-btn" style="background: #2ecc71;" onclick="acceptCall()"><i class="fas fa-phone"></i></div>
+        </div>
+    </div>
+
+    <div id="app-gallery" class="app-window">
+        <div class="app-header">
+            <i class="fas fa-arrow-right" onclick="goHome()"></i> المعرض
+        </div>
+        <div class="app-content gallery-grid">
+            <div class="photo-thumb" style="background-image: url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=200');" onclick="viewPhoto('cat')"></div>
+            <div class="photo-thumb" style="background-image: url('https://images.unsplash.com/photo-1481349518771-20055b2a7b24?w=200');" onclick="viewPhoto('party')"></div>
+            <div class="photo-thumb" style="background: #ddd; display: flex; justify-content: center; align-items: center; color: black; font-size: 10px; text-align: center;" onclick="viewPhoto('id')">
+                📄<br>هوية<br>سامر
             </div>
-        </div>
-    </div>
-
-    <div id="app-camera" class="app-window" style="background:black;">
-        <video id="camera-video" autoplay playsinline></video>
-        <div class="cam-controls">
-            <div class="shutter-btn" onclick="takePhoto()"></div>
-        </div>
-        <div style="position:absolute; top:20px; right:20px; color:white;" onclick="goBack()">✖</div>
-    </div>
-
-    <div id="app-calculator" class="app-window" style="background:#000;">
-        <div class="calc-display" id="calc-res">0</div>
-        <div class="calc-grid">
-            <div class="calc-btn" onclick="calcInput('C')">C</div>
-            <div class="calc-btn" onclick="calcInput('±')">±</div>
-            <div class="calc-btn" onclick="calcInput('%')">%</div>
-            <div class="calc-btn orange" onclick="calcInput('/')">÷</div>
-            <div class="calc-btn" onclick="calcInput('7')">7</div>
-            <div class="calc-btn" onclick="calcInput('8')">8</div>
-            <div class="calc-btn" onclick="calcInput('9')">9</div>
-            <div class="calc-btn orange" onclick="calcInput('*')">×</div>
-            <div class="calc-btn" onclick="calcInput('4')">4</div>
-            <div class="calc-btn" onclick="calcInput('5')">5</div>
-            <div class="calc-btn" onclick="calcInput('6')">6</div>
-            <div class="calc-btn orange" onclick="calcInput('-')">-</div>
-            <div class="calc-btn" onclick="calcInput('1')">1</div>
-            <div class="calc-btn" onclick="calcInput('2')">2</div>
-            <div class="calc-btn" onclick="calcInput('3')">3</div>
-            <div class="calc-btn orange" onclick="calcInput('+')">+</div>
-            <div class="calc-btn" style="grid-column: span 2;" onclick="calcInput('0')">0</div>
-            <div class="calc-btn" onclick="calcInput('.')">.</div>
-            <div class="calc-btn orange" onclick="calcInput('=')">=</div>
+            <div class="photo-thumb" style="background-image: url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=200');" onclick="viewPhoto('furniture')"></div>
         </div>
     </div>
     
-    <div id="app-dialer" class="app-window">
-        <div style="flex-grow:1; display:flex; justify-content:center; align-items:center; font-size:30px; font-weight:bold;" id="dial-display"></div>
-        <div style="display:grid; grid-template-columns:repeat(3, 1fr); text-align:center; padding-bottom:20px;">
-            <div style="padding:15px; font-size:24px; cursor:pointer;" onclick="dialNum(1)">1</div>
-            <div style="padding:15px; font-size:24px; cursor:pointer;" onclick="dialNum(2)">2</div>
-            <div style="padding:15px; font-size:24px; cursor:pointer;" onclick="dialNum(3)">3</div>
-            <div style="padding:15px; font-size:24px; cursor:pointer;" onclick="dialNum(4)">4</div>
-            <div style="padding:15px; font-size:24px; cursor:pointer;" onclick="dialNum(5)">5</div>
-            <div style="padding:15px; font-size:24px; cursor:pointer;" onclick="dialNum(6)">6</div>
-            <div style="padding:15px; font-size:24px; cursor:pointer;" onclick="dialNum(7)">7</div>
-            <div style="padding:15px; font-size:24px; cursor:pointer;" onclick="dialNum(8)">8</div>
-            <div style="padding:15px; font-size:24px; cursor:pointer;" onclick="dialNum(9)">9</div>
-            <div style="padding:15px; font-size:24px; cursor:pointer;">*</div>
-            <div style="padding:15px; font-size:24px; cursor:pointer;" onclick="dialNum(0)">0</div>
-            <div style="padding:15px; font-size:24px; cursor:pointer;">#</div>
-        </div>
-        <div style="background:#2ecc71; width:60px; height:60px; border-radius:50%; align-self:center; display:flex; justify-content:center; align-items:center; color:white; font-size:24px; margin-bottom:20px; box-shadow:0 4px 10px rgba(46,204,113,0.4);">📞</div>
+    <div id="photo-viewer" class="photo-full">
+        <img id="full-img" src="" style="max-width: 90%; max-height: 80%; border: 5px solid white;">
+        <div id="photo-desc" style="color: white; margin-top: 20px; text-align: center; background: rgba(0,0,0,0.8); padding: 10px;"></div>
+        <button onclick="closePhoto()" style="margin-top: 20px; padding: 10px 20px; background: red; color: white; border: none; border-radius: 5px;">إغلاق</button>
     </div>
 
-    <div class="nav-bar">
-        <div class="nav-btn" onclick="goBack()">◀</div>
-        <div class="nav-btn" onclick="goHome()">●</div>
-        <div class="nav-btn" onclick="showRecent()">◼</div>
+    <div id="app-messages" class="app-window">
+        <div class="app-header">
+            <i class="fas fa-arrow-right" onclick="goHome()"></i> المحادثات
+        </div>
+        <div class="app-content">
+            <div style="display: flex; gap: 10px; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px;">
+                <div style="width: 50px; height: 50px; background: orange; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white;">أمي</div>
+                <div>
+                    <b>أمي الغالية ❤️</b><br>
+                    <span style="color: gray; font-size: 12px;">ليش ما ترد يمة؟ قلبي نار</span>
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column;">
+                <div class="msg-bubble msg-out">طالع للشغل يمة، لا تخافين.</div>
+                <div class="msg-bubble msg-in">دير بالك، سمعت اكو مشاكل بالمنطقة.</div>
+                <div class="msg-bubble msg-in">اكو واحد سأل عليك اليوم، شكله غريب لابس اسود.</div>
+                <div class="msg-bubble msg-out">منو هذا؟ شيريد؟</div>
+                <div class="msg-bubble msg-in">ما ادري يمة، بس كال "الكود القديم" وتاريخ ميلادك 1998.</div>
+                <div class="msg-bubble msg-out">شنو؟؟ 1998؟ يمة قفلي الباب زين!!</div>
+            </div>
+        </div>
     </div>
+
+    <div id="app-files" class="app-window" style="background: #222; color: white;">
+        <div class="app-header" style="background: #333; color: red;">
+            <i class="fas fa-times" onclick="goHome()"></i> سري للغاية (Top Secret)
+        </div>
+        <div class="app-content" style="text-align: center; padding-top: 50px;">
+            <i class="fas fa-file-contract" style="font-size: 60px; color: red; margin-bottom: 20px;"></i>
+            <h3>بيانات المشروع X</h3>
+            <p>هذا الملف محمي بكلمة مرور مشفرة</p>
+            <input type="password" id="secret-pass" placeholder="أدخل الكود السري" style="padding: 10px; width: 80%; margin-top: 20px; text-align: center;">
+            <button onclick="unlockSecret()" style="margin-top: 10px; padding: 10px 20px; background: red; color: white; border: none; cursor: pointer;">فتح التشفير</button>
+            <p style="font-size: 12px; color: gray; margin-top: 20px;">تلميح: ذكرته أمي في الرسائل</p>
+        </div>
+    </div>
+
+    <div id="app-voice" class="app-window">
+        <div class="app-header">
+            <i class="fas fa-arrow-right" onclick="goHome()"></i> التسجيلات
+        </div>
+        <div class="app-content">
+            <div class="secret-file" onclick="playVoice('rec1')" style="background: white; border: 1px solid #ddd; color: black; display: flex; justify-content: space-between;">
+                <span>تسجيل #1 - البداية</span> <i class="fas fa-play"></i>
+            </div>
+            <div class="secret-file" onclick="playVoice('rec2')" style="background: white; border: 1px solid #ddd; color: black; display: flex; justify-content: space-between;">
+                <span>تسجيل #2 - المطاردة</span> <i class="fas fa-play"></i>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-notes" class="app-window">
+        <div class="app-header">
+            <i class="fas fa-arrow-right" onclick="goHome()"></i> مذكراتي
+        </div>
+        <div class="app-content">
+            <div style="background: #fffbe6; padding: 15px; margin-bottom: 10px; border: 1px solid #eee;">
+                <b>قائمة مهام:</b><br>
+                1. مسح الهارد ديسك.<br>
+                2. تغيير مكان السكن.<br>
+                3. الاتصال بـ "العميل" وتسليمه الكود (1998).
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script>
-    // --- 1. النظام والوقت ---
-    function updateClock() {
-        const now = new Date();
-        const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
-        
-        document.getElementById('lock-clock').innerText = time;
-        document.getElementById('home-clock').innerText = time;
-        document.getElementById('status-clock').innerText = time;
-        document.getElementById('panel-clock').innerText = time;
+    /* --- 1. المنطق الأساسي للعبة --- */
+    let isPhoneUnlocked = false;
+    let mysterySolved = false;
+
+    // فتح القفل (اللغز الأول: رمز بسيط)
+    // سنجعل الرمز 0000 للسهولة في البداية ليدخل اللاعب، لكن الأهم هو الألغاز بالداخل
+    function checkPass() {
+        const pass = document.getElementById('pass-code').value;
+        if(pass === '1998') { // جعلته نفس تاريخ الميلاد لربط القصة
+            unlockPhone();
+        } else if (pass === '0000') {
+             alert("هذا الرمز الافتراضي.. لكن سامر غيره! ابحث عن تاريخ ميلاده.");
+        } else {
+            document.getElementById('pass-code').style.border = "2px solid red";
+            navigator.vibrate(200);
+        }
     }
-    setInterval(updateClock, 1000);
-    updateClock();
 
-    // --- 2. الإقلاع (Boot) ---
-    setTimeout(() => {
-        document.getElementById('boot-screen').style.display = 'none';
-        document.getElementById('lock-screen').style.display = 'flex';
-    }, 3000); // 3 ثواني إقلاع
-
-    // --- 3. قفل الشاشة واللمس ---
     function unlockPhone() {
-        // تأثير اهتزاز
-        if(navigator.vibrate) navigator.vibrate(50);
-        
-        document.getElementById('lock-screen').style.transition = 'transform 0.4s';
-        document.getElementById('lock-screen').style.transform = 'translateY(-100%)';
-        setTimeout(() => {
-            document.getElementById('lock-screen').style.display = 'none';
-        }, 400);
-    }
-
-    // --- 4. شريط الإشعارات ---
-    let startY;
-    document.addEventListener('touchstart', e => {
-        if(e.touches[0].clientY < 30) startY = e.touches[0].clientY;
-    });
-    
-    document.addEventListener('touchmove', e => {
-        if(startY && e.touches[0].clientY > startY + 50) {
-            document.getElementById('notification-panel').style.top = '0';
-            startY = null;
-        }
-    });
-
-    function pullUpPanel() {
-        document.getElementById('notification-panel').style.top = '-100%';
-    }
-
-    function toggleQS(el) {
-        el.classList.toggle('qs-active');
-        if(navigator.vibrate) navigator.vibrate(20);
-    }
-
-    // --- 5. نظام التطبيقات ---
-    let appStack = [];
-
-    function openApp(id) {
-        // إغلاق أي تطبيق مفتوح حالياً
-        const apps = document.querySelectorAll('.app-window');
-        apps.forEach(app => app.style.display = 'none');
-        
-        // فتح التطبيق
-        const target = document.getElementById('app-' + id);
-        if(target) {
-            target.style.display = 'flex';
-            appStack.push(target);
-            
-            // تشغيل الكاميرا إذا كان التطبيق هو الكاميرا
-            if(id === 'camera') startCamera();
-        }
+        document.getElementById('lock-screen').style.display = 'none';
+        document.getElementById('home-screen').style.display = 'flex';
+        isPhoneUnlocked = true;
+        // بدء المؤقت للاتصال المرعب
+        setTimeout(triggerIncomingCall, 15000); // بعد 15 ثانية
     }
 
     function goHome() {
         const apps = document.querySelectorAll('.app-window');
         apps.forEach(app => app.style.display = 'none');
-        appStack = [];
-        stopCamera();
-        if(navigator.vibrate) navigator.vibrate(30);
     }
 
-    function goBack() {
-        if(appStack.length > 0) {
-            const app = appStack.pop();
-            app.style.display = 'none';
-            if(app.id === 'app-camera') stopCamera();
-        }
-        if(navigator.vibrate) navigator.vibrate(30);
+    function openApp(id) {
+        document.getElementById('app-' + id).style.display = 'flex';
     }
 
-    // --- 6. تطبيق المتصفح (المحاكي) ---
-    function handleSearch(e) {
-        if(e.key === 'Enter') {
-            const query = document.getElementById('browser-url').value;
-            const body = document.getElementById('browser-body');
-            
-            // محاكاة تحميل
-            body.innerHTML = '<div style="text-align:center; margin-top:50px;">جاري التحميل...</div>';
-            
-            setTimeout(() => {
-                // نتائج وهمية تخدم القصة
-                if(query.includes('رمز') || query.includes('خزنة')) {
-                    body.innerHTML = `
-                        <div style="padding:15px;">
-                            <div class="search-result">
-                                <a href="#" class="search-link">كيفية فتح الخزائن القديمة؟</a>
-                                <div class="search-desc">أفضل الطرق لفتح الخزنة المنسية. جرب استخدام تواريخ الميلاد بالمقلوب...</div>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    body.innerHTML = `
-                        <div style="padding:15px; text-align:center;">
-                            <h3>لا يوجد اتصال بالإنترنت</h3>
-                            <p>تأكد من تفعيل الواي فاي من شريط الإشعارات.</p>
-                        </div>
-                    `;
-                }
-            }, 1000);
+    /* --- 2. نظام الاتصال المرعب --- */
+    function triggerIncomingCall() {
+        if(!mysterySolved) {
+            document.getElementById('incoming-call').style.display = 'flex';
+            // صوت رنين وهمي (اهتزاز)
+            navigator.vibrate([500, 200, 500, 200, 500]);
         }
-    }
-    
-    function goHomeBrowser() {
-        document.getElementById('browser-body').innerHTML = `
-            <div style="display:flex; flex-direction:column; align-items:center; margin-top:50px;">
-                <h1 style="color:#4285f4; font-size:40px;">G<span style="color:#ea4335">o</span><span style="color:#fbbc05">o</span><span style="color:#4285f4">g</span><span style="color:#34a853">l</span><span style="color:#ea4335">e</span></h1>
-                <p style="color:gray;">ابحث في الويب...</p>
-            </div>
-        `;
-        document.getElementById('browser-url').value = '';
     }
 
-    // --- 7. الكاميرا الحقيقية ---
-    let videoStream;
-    function startCamera() {
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
-                .then(function (stream) {
-                    videoStream = stream;
-                    document.getElementById('camera-video').srcObject = stream;
-                })
-                .catch(function (err) {
-                    console.log("خطأ في الكاميرا: " + err);
-                    alert("يجب السماح للكاميرا بالعمل لتجربة اللعبة!");
-                });
-        }
-    }
-    
-    function stopCamera() {
-        if (videoStream) {
-            videoStream.getTracks().forEach(track => track.stop());
-        }
-    }
-    
-    function takePhoto() {
-        // وميض الشاشة
-        const camDiv = document.getElementById('app-camera');
-        camDiv.style.background = 'white';
-        setTimeout(() => camDiv.style.background = 'black', 100);
-        if(navigator.vibrate) navigator.vibrate(50);
-        alert("تم حفظ الصورة في المعرض (وهمي)");
+    function rejectCall() {
+        document.getElementById('incoming-call').style.display = 'none';
+        alert("لا يمكنك الهروب... سيتصلون مجدداً.");
+        setTimeout(triggerIncomingCall, 10000);
     }
 
-    // --- 8. الآلة الحاسبة ---
-    let calcExp = "";
-    function calcInput(val) {
-        if(val === 'C') {
-            calcExp = "";
-        } else if(val === '=') {
-            try { calcExp = eval(calcExp); } catch { calcExp = "Error"; }
+    function acceptCall() {
+        document.getElementById('incoming-call').style.display = 'none';
+        // تشغيل صوت مرعب باستخدام Text-to-Speech
+        const msg = new SpeechSynthesisUtterance("Listen to me carefully. They know you have the phone. Do not open the secret file.");
+        msg.lang = 'en-US';
+        msg.pitch = 0.5; // صوت غليظ
+        msg.rate = 0.8; // بطيء
+        window.speechSynthesis.speak(msg);
+        
+        // تأثير تشويش الشاشة
+        document.getElementById('phone-frame').classList.add('glitch');
+        setTimeout(() => document.getElementById('phone-frame').classList.remove('glitch'), 2000);
+    }
+
+    /* --- 3. نظام الصور والأدلة --- */
+    function viewPhoto(type) {
+        const viewer = document.getElementById('photo-viewer');
+        const img = document.getElementById('full-img');
+        const desc = document.getElementById('photo-desc');
+        
+        viewer.style.display = 'flex';
+        
+        if(type === 'id') {
+            img.src = 'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?w=400';
+            desc.innerHTML = "هوية: سامر كمال<br>الميلاد: <b>1998</b><br>(تذكر هذا التاريخ!)";
         } else {
-            calcExp += val;
+            img.src = 'https://images.unsplash.com/photo-1481349518771-20055b2a7b24?w=400';
+            desc.innerHTML = "صورة عشوائية.. لا تبدو مهمة.";
         }
-        document.getElementById('calc-res').innerText = calcExp || "0";
     }
 
-    // --- 9. الهاتف ---
-    function dialNum(num) {
-        document.getElementById('dial-display').innerText += num;
-        if(navigator.vibrate) navigator.vibrate(30);
+    function closePhoto() {
+        document.getElementById('photo-viewer').style.display = 'none';
+    }
+
+    /* --- 4. فك تشفير الملف السري --- */
+    function unlockSecret() {
+        const pass = document.getElementById('secret-pass').value;
+        if(pass === '1998') {
+            document.getElementById('app-files').innerHTML = `
+                <div style="padding:20px; text-align:center; color:white;">
+                    <h1 style="color:#2ecc71;">تم الوصول!</h1>
+                    <p>لقد وجدت ملفات سامر المسروقة.</p>
+                    <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=300" style="border-radius:10px; margin:20px 0;">
+                    <p>أنت الآن في خطر... تخلص من الهاتف فوراً!</p>
+                    <button onclick="location.reload()" style="background:red; color:white; border:none; padding:15px; border-radius:10px;">إنهاء اللعبة</button>
+                </div>
+            `;
+            mysterySolved = true;
+        } else {
+            alert("رمز خاطئ! حاول البحث في الرسائل والصور.");
+            document.getElementById('phone-frame').classList.add('glitch'); // عقوبة
+            setTimeout(() => document.getElementById('phone-frame').classList.remove('glitch'), 500);
+        }
+    }
+
+    /* --- 5. مشغل الصوتيات (Text to Speech) --- */
+    function playVoice(id) {
+        let text = "";
+        if(id === 'rec1') text = "اسمي سامر. اليوم 10 اكتوبر. لقيت ثغرة بنظام البنك. اعتقد كشفوني.";
+        if(id === 'rec2') text = "جاي يلاحقوني سيارة سوداء. راح اضم الموبايل وارمي الشريحة. اذا تسمع هذا التسجيل، بلغ الشرطة.";
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'ar-SA'; // لهجة عربية
+        window.speechSynthesis.speak(utterance);
     }
 
 </script>
 </body>
-        </html>
+</html>
