@@ -2,386 +2,413 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>لغز هاتف سامر المفقود</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مركز الأدلة الجنائية والتحقيقات الرقمية</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;400;600;700&family=Tajawal:wght@300;500;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        forensic: {
+                            dark: '#0f172a',
+                            light: '#1e293b',
+                            accent: '#38bdf8', // Light Blue
+                            alert: '#eab308', // Crime Scene Yellow
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        tajawal: ['Tajawal', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'scan': 'scan 2s linear infinite',
+                    },
+                    keyframes: {
+                        scan: {
+                            '0%': { transform: 'translateY(-100%)' },
+                            '100%': { transform: 'translateY(100%)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        /* --- الأساسيات --- */
-        :root { --primary: #007aff; --bg: #111; --text: #fff; }
-        * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; font-family: 'Segoe UI', sans-serif; }
-        body { margin: 0; padding: 0; background: #050505; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
-
-        /* --- الهاتف --- */
-        .phone {
-            width: 360px; height: 780px; background: #000; border-radius: 40px;
-            border: 6px solid #222; box-shadow: 0 0 60px rgba(0,100,255,0.1);
-            position: relative; overflow: hidden;
+        body {
+            font-family: 'Cairo', sans-serif;
+            scroll-behavior: smooth;
         }
-        .notch {
-            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-            width: 140px; height: 28px; background: #000;
-            border-bottom-left-radius: 18px; border-bottom-right-radius: 18px; z-index: 9999;
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        /* --- الشاشات --- */
-        .screen {
-            width: 100%; height: 100%; position: absolute; top: 0; left: 0;
-            display: none; flex-direction: column; background-size: cover; background-position: center;
+        .fingerprint-bg {
+            background-image: url('https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'); /* Tech/Code background as abstraction */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
-
-        /* شاشة القفل */
-        #lock-screen {
-            background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800');
-            display: flex; color: white; text-align: center; z-index: 500;
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-        .pass-input {
-            width: 80%; padding: 15px; font-size: 20px; text-align: center; margin-top: 20px;
-            border-radius: 10px; border: none; background: rgba(255,255,255,0.2); color: white; outline: none;
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
         }
-
-        /* الشاشة الرئيسية */
-        #home-screen {
-            background-image: url('https://images.unsplash.com/photo-1480796927426-f609979314bd?w=800');
-            z-index: 100;
+        ::-webkit-scrollbar-thumb {
+            background: #38bdf8;
+            border-radius: 4px;
         }
-
-        /* --- التطبيقات والأيقونات --- */
-        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; margin-top: 30px; }
-        .app-icon {
-            width: 60px; height: 60px; border-radius: 15px; display: flex; justify-content: center; align-items: center;
-            font-size: 28px; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.3); margin-bottom: 5px; cursor: pointer; transition: 0.1s;
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #38bdf8;
+            box-shadow: 0 0 10px #38bdf8;
+            opacity: 0.5;
+            top: 0;
+            left: 0;
+            animation: scan 3s linear infinite;
+            pointer-events: none;
         }
-        .app-icon:active { transform: scale(0.9); }
-        .label { font-size: 11px; color: white; text-shadow: 0 1px 2px black; text-align: center; }
-        .badge {
-            position: absolute; top: -5px; right: -5px; background: red; color: white; font-size: 10px;
-            width: 20px; height: 20px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
-        }
-
-        /* --- النوافذ الداخلية --- */
-        .app-window {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #f2f2f2; z-index: 600; display: none; flex-direction: column;
-            animation: slideUp 0.3s;
-        }
-        .app-header {
-            background: white; padding: 15px; padding-top: 40px; display: flex; align-items: center; gap: 10px;
-            font-weight: bold; border-bottom: 1px solid #ddd;
-        }
-        .app-content { flex-grow: 1; overflow-y: auto; padding: 15px; }
-
-        /* شاشة الاتصال المرعبة */
-        #incoming-call {
-            background: linear-gradient(to bottom, #2c3e50, #000); color: white;
-            z-index: 9000; display: none; align-items: center; justify-content: center; flex-direction: column;
-        }
-        .caller-img { width: 100px; height: 100px; background: #555; border-radius: 50%; margin-bottom: 20px; display:flex; justify-content:center; align-items:center; font-size:40px;}
-        .call-actions { display: flex; gap: 50px; margin-top: 50px; }
-        .call-btn { width: 70px; height: 70px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 30px; color: white; cursor: pointer; animation: pulse 1s infinite; }
-
-        /* معرض الصور */
-        .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
-        .photo-thumb { height: 100px; background: #333; cursor: pointer; position: relative; overflow: hidden; }
-        .photo-full { position: absolute; top:0; left:0; width:100%; height:100%; background:black; z-index:2000; display:none; justify-content:center; align-items:center; flex-direction:column;}
-
-        /* الرسائل */
-        .msg-bubble { padding: 10px 15px; border-radius: 20px; margin-bottom: 10px; max-width: 80%; font-size: 14px; position: relative; }
-        .msg-in { background: white; align-self: flex-start; border-bottom-right-radius: 2px; }
-        .msg-out { background: #dcf8c6; align-self: flex-end; border-bottom-left-radius: 2px; }
-
-        /* الملفات السرية */
-        .secret-file { padding: 15px; background: #ffdede; border: 1px solid red; border-radius: 8px; color: red; text-align: center; margin-top: 20px; cursor: pointer; }
-
-        /* تشويش الشاشة */
-        .glitch { animation: shake 0.5s; filter: hue-rotate(90deg); }
-
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(3px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(1px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
-
     </style>
 </head>
-<body>
+<body class="bg-forensic-dark text-slate-200 overflow-x-hidden">
 
-<div class="phone" id="phone-frame">
-    <div class="notch"></div>
-
-    <div id="lock-screen" class="screen">
-        <div style="margin-top: 80px;">
-            <h1 style="font-size: 60px; font-weight: 200;">10:24</h1>
-            <p>الجمعة، 13 أكتوبر</p>
-            <div style="margin-top: 50px; background: rgba(0,0,0,0.5); padding: 20px; border-radius: 15px; width: 80%; margin-left: auto; margin-right: auto;">
-                <i class="fas fa-lock"></i>
-                <p>الهاتف مقفل</p>
-                <input type="password" id="pass-code" class="pass-input" placeholder="أدخل الرمز" maxlength="4">
-                <button onclick="checkPass()" style="margin-top: 10px; padding: 10px 20px; border-radius: 20px; border: none; background: #007aff; color: white;">فتح</button>
-                <p style="font-size: 10px; margin-top: 10px; color: #ccc;">تلميح: الرمز هو سنة ميلاد سامر (ابحث في الصور)</p>
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-panel border-b border-slate-700 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-fingerprint text-4xl text-forensic-accent animate-pulse-slow"></i>
+                    <div>
+                        <h1 class="text-xl font-bold text-white tracking-wider font-tajawal">وحدة الأدلة الجنائية</h1>
+                        <p class="text-xs text-slate-400">Forensic Evidence Unit</p>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4 space-x-reverse">
+                        <a href="#home" class="hover:text-forensic-accent px-3 py-2 rounded-md text-sm font-medium transition-colors">الرئيسية</a>
+                        <a href="#services" class="hover:text-forensic-accent px-3 py-2 rounded-md text-sm font-medium transition-colors">الأقسام</a>
+                        <a href="#process" class="hover:text-forensic-accent px-3 py-2 rounded-md text-sm font-medium transition-colors">مراحل التحقيق</a>
+                        <a href="#status" class="bg-forensic-accent text-forensic-dark px-4 py-2 rounded-full font-bold hover:bg-white transition-all transform hover:scale-105">متابعة قضية</a>
+                    </div>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button onclick="toggleMenu()" class="text-slate-300 hover:text-white focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-t border-slate-700">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
+                <a href="#home" class="block hover:bg-slate-800 px-3 py-2 rounded-md text-base font-medium">الرئيسية</a>
+                <a href="#services" class="block hover:bg-slate-800 px-3 py-2 rounded-md text-base font-medium">الأقسام</a>
+                <a href="#process" class="block hover:bg-slate-800 px-3 py-2 rounded-md text-base font-medium">مراحل التحقيق</a>
+            </div>
+        </div>
+    </nav>
 
-    <div id="home-screen" class="screen">
-        <div style="padding: 20px; color: white; padding-top: 40px;">
-            <div style="display: flex; justify-content: space-between;">
-                <span>Tecno LTE</span>
-                <span>🔋 14%</span>
+    <!-- Hero Section -->
+    <header id="home" class="relative h-screen flex items-center justify-center fingerprint-bg">
+        <div class="absolute inset-0 bg-slate-900/80"></div> <!-- Overlay -->
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
+            <div class="inline-block mb-4 px-4 py-1 border border-forensic-alert text-forensic-alert rounded-full text-sm font-bold tracking-widest uppercase bg-forensic-alert/10 backdrop-blur-sm">
+                الدقة • العلم • العدالة
+            </div>
+            <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 font-tajawal leading-tight">
+                كشف الحقيقة <span class="text-forensic-accent">بالدليل العلمي</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-slate-300 mb-10 font-light max-w-2xl mx-auto">
+                نستخدم أحدث التقنيات المخبرية والرقمية لتحليل مسرح الجريمة وتقديم أدلة لا تقبل الشك.
+            </p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <a href="#services" class="bg-forensic-accent text-forensic-dark px-8 py-4 rounded-lg font-bold text-lg hover:bg-white transition-all shadow-lg shadow-forensic-accent/20">
+                    استعراض الخدمات
+                </a>
+                <a href="#contact" class="border border-slate-400 text-slate-200 px-8 py-4 rounded-lg font-bold text-lg hover:bg-slate-800/50 hover:border-white transition-all">
+                    تواصل معنا
+                </a>
             </div>
         </div>
         
-        <div class="app-grid">
-            <div onclick="openApp('gallery')">
-                <div class="app-icon" style="background: linear-gradient(45deg, #ff9a9e, #fad0c4);"><i class="fas fa-images"></i></div>
-                <div class="label">الصور</div>
+        <!-- Decoration: Scanning Line animation -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
+            <div class="scan-line"></div>
+        </div>
+    </header>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-forensic-dark relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 font-tajawal">أقسام المختبر الجنائي</h2>
+                <div class="h-1 w-20 bg-forensic-accent mx-auto rounded-full"></div>
             </div>
-            <div onclick="openApp('messages')">
-                <div class="app-icon" style="background: linear-gradient(45deg, #a18cd1, #fbc2eb); position: relative;">
-                    <i class="fas fa-comment-dots"></i>
-                    <div class="badge">3</div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-slate-800/50 p-8 rounded-xl border border-slate-700 hover:border-forensic-accent transition-all duration-300 group hover:-translate-y-2">
+                    <div class="w-14 h-14 bg-forensic-accent/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-forensic-accent transition-colors">
+                        <i class="fa-solid fa-dna text-2xl text-forensic-accent group-hover:text-forensic-dark"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">تحليل الحمض النووي (DNA)</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        استخلاص ومطابقة البصمة الوراثية بأحدث التقنيات لتحديد الهوية والعلاقات البيولوجية بدقة متناهية.
+                    </p>
                 </div>
-                <div class="label">الرسائل</div>
-            </div>
-            <div onclick="openApp('notes')">
-                <div class="app-icon" style="background: #f6d365;"><i class="fas fa-sticky-note"></i></div>
-                <div class="label">مذكراتي</div>
-            </div>
-            <div onclick="openApp('voice')">
-                <div class="app-icon" style="background: #ff512f;"><i class="fas fa-microphone-alt"></i></div>
-                <div class="label">تسجيلات</div>
-            </div>
-            <div onclick="openApp('files')">
-                <div class="app-icon" style="background: #434343;"><i class="fas fa-folder-lock"></i></div>
-                <div class="label">سري للغاية</div>
-            </div>
-            <div onclick="openApp('settings')">
-                <div class="app-icon" style="background: #555;"><i class="fas fa-cog"></i></div>
-                <div class="label">الإعدادات</div>
-            </div>
-        </div>
 
-        <div style="position: absolute; bottom: 20px; width: 90%; left: 5%; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border-radius: 25px; padding: 10px; display: flex; justify-content: space-around;">
-            <div class="app-icon" style="width: 45px; height: 45px; background: #2ecc71; margin: 0;"><i class="fas fa-phone"></i></div>
-            <div class="app-icon" style="width: 45px; height: 45px; background: #3498db; margin: 0;"><i class="fas fa-globe"></i></div>
-            <div class="app-icon" style="width: 45px; height: 45px; background: #9b59b6; margin: 0;"><i class="fas fa-camera"></i></div>
-        </div>
-    </div>
+                <!-- Card 2 -->
+                <div class="bg-slate-800/50 p-8 rounded-xl border border-slate-700 hover:border-forensic-accent transition-all duration-300 group hover:-translate-y-2">
+                    <div class="w-14 h-14 bg-forensic-accent/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-forensic-accent transition-colors">
+                        <i class="fa-solid fa-laptop-code text-2xl text-forensic-accent group-hover:text-forensic-dark"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">الأدلة الجنائية الرقمية</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        استرجاع البيانات المحذوفة، تحليل الهواتف والحواسيب، وتتبع الجرائم الإلكترونية والاختراقات.
+                    </p>
+                </div>
 
-    <div id="incoming-call" class="screen">
-        <div style="margin-top: 100px; text-align: center;">
-            <div class="caller-img">🕵️</div>
-            <h2 style="font-size: 30px; margin-bottom: 5px;">رقم مجهول</h2>
-            <p>يتصل بك...</p>
-        </div>
-        <div class="call-actions">
-            <div class="call-btn" style="background: #e74c3c;" onclick="rejectCall()"><i class="fas fa-phone-slash"></i></div>
-            <div class="call-btn" style="background: #2ecc71;" onclick="acceptCall()"><i class="fas fa-phone"></i></div>
-        </div>
-    </div>
+                <!-- Card 3 -->
+                <div class="bg-slate-800/50 p-8 rounded-xl border border-slate-700 hover:border-forensic-accent transition-all duration-300 group hover:-translate-y-2">
+                    <div class="w-14 h-14 bg-forensic-accent/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-forensic-accent transition-colors">
+                        <i class="fa-solid fa-flask text-2xl text-forensic-accent group-hover:text-forensic-dark"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">السموم والمخدرات</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        تحليل العينات البيولوجية للكشف عن وجود السموم، المخدرات، أو المواد الكيميائية الضارة.
+                    </p>
+                </div>
 
-    <div id="app-gallery" class="app-window">
-        <div class="app-header">
-            <i class="fas fa-arrow-right" onclick="goHome()"></i> المعرض
-        </div>
-        <div class="app-content gallery-grid">
-            <div class="photo-thumb" style="background-image: url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=200');" onclick="viewPhoto('cat')"></div>
-            <div class="photo-thumb" style="background-image: url('https://images.unsplash.com/photo-1481349518771-20055b2a7b24?w=200');" onclick="viewPhoto('party')"></div>
-            <div class="photo-thumb" style="background: #ddd; display: flex; justify-content: center; align-items: center; color: black; font-size: 10px; text-align: center;" onclick="viewPhoto('id')">
-                📄<br>هوية<br>سامر
+                <!-- Card 4 -->
+                <div class="bg-slate-800/50 p-8 rounded-xl border border-slate-700 hover:border-forensic-accent transition-all duration-300 group hover:-translate-y-2">
+                    <div class="w-14 h-14 bg-forensic-accent/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-forensic-accent transition-colors">
+                        <i class="fa-solid fa-fingerprint text-2xl text-forensic-accent group-hover:text-forensic-dark"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">البصمات وآثار الأسلحة</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        مظاهات البصمات المرفوعة من مسرح الجريمة وفحص المقذوفات النارية لتحديد نوع السلاح المستخدم.
+                    </p>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="bg-slate-800/50 p-8 rounded-xl border border-slate-700 hover:border-forensic-accent transition-all duration-300 group hover:-translate-y-2">
+                    <div class="w-14 h-14 bg-forensic-accent/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-forensic-accent transition-colors">
+                        <i class="fa-solid fa-file-contract text-2xl text-forensic-accent group-hover:text-forensic-dark"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">فحص التزييف والتزوير</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        كشف التلاعب في المستندات الرسمية، العملات، والتواقيع باستخدام الأشعة والميكروسكوبات المتطورة.
+                    </p>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="bg-slate-800/50 p-8 rounded-xl border border-slate-700 hover:border-forensic-accent transition-all duration-300 group hover:-translate-y-2">
+                    <div class="w-14 h-14 bg-forensic-accent/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-forensic-accent transition-colors">
+                        <i class="fa-solid fa-camera-retro text-2xl text-forensic-accent group-hover:text-forensic-dark"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">تصوير مسرح الجريمة</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        توثيق دقيق لمسرح الجريمة بتقنيات 3D والمسح الليزري لضمان عدم ضياع أي دليل مهما كان صغيراً.
+                    </p>
+                </div>
             </div>
-            <div class="photo-thumb" style="background-image: url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=200');" onclick="viewPhoto('furniture')"></div>
         </div>
-    </div>
-    
-    <div id="photo-viewer" class="photo-full">
-        <img id="full-img" src="" style="max-width: 90%; max-height: 80%; border: 5px solid white;">
-        <div id="photo-desc" style="color: white; margin-top: 20px; text-align: center; background: rgba(0,0,0,0.8); padding: 10px;"></div>
-        <button onclick="closePhoto()" style="margin-top: 20px; padding: 10px 20px; background: red; color: white; border: none; border-radius: 5px;">إغلاق</button>
-    </div>
+    </section>
 
-    <div id="app-messages" class="app-window">
-        <div class="app-header">
-            <i class="fas fa-arrow-right" onclick="goHome()"></i> المحادثات
+    <!-- Case Status Section (Interactive) -->
+    <section id="status" class="py-20 bg-slate-900 border-y border-slate-800">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="glass-panel p-8 md:p-12 rounded-2xl text-center relative overflow-hidden">
+                
+                <!-- Decoration -->
+                <div class="absolute top-0 right-0 w-32 h-32 bg-forensic-accent/10 blur-3xl rounded-full"></div>
+                <div class="absolute bottom-0 left-0 w-32 h-32 bg-forensic-alert/10 blur-3xl rounded-full"></div>
+
+                <i class="fa-solid fa-magnifying-glass-chart text-5xl text-slate-500 mb-6 block mx-auto"></i>
+                
+                <h2 class="text-3xl font-bold text-white mb-2 font-tajawal">نظام تتبع القضايا</h2>
+                <p class="text-slate-400 mb-8">أدخل الرقم المرجعي للقضية (Case ID) لمعرفة حالة التحليل المخبري.</p>
+                
+                <div class="max-w-lg mx-auto bg-slate-800 p-2 rounded-lg flex flex-col sm:flex-row gap-2 border border-slate-700">
+                    <input type="text" id="caseInput" placeholder="مثال: CR-2024-8892" class="flex-1 bg-transparent text-white px-4 py-3 outline-none placeholder-slate-500 text-center sm:text-right font-mono">
+                    <button onclick="checkStatus()" class="bg-forensic-accent text-forensic-dark font-bold px-8 py-3 rounded-md hover:bg-white transition-colors">
+                        <i class="fa-solid fa-search ml-2"></i> بحث
+                    </button>
+                </div>
+
+                <!-- Result Area -->
+                <div id="resultArea" class="hidden mt-8 p-4 bg-slate-800/80 rounded-lg border-r-4 border-forensic-alert text-right animate-pulse">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-slate-400">حالة القضية</p>
+                            <p class="text-lg font-bold text-forensic-alert mt-1"><i class="fa-solid fa-flask ml-2"></i> قيد التحليل المخبري</p>
+                        </div>
+                        <div class="text-left">
+                            <p class="text-xs text-slate-400">تاريخ الاستلام</p>
+                            <p class="text-sm font-mono text-white">2023-10-24</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="app-content">
-            <div style="display: flex; gap: 10px; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px;">
-                <div style="width: 50px; height: 50px; background: orange; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white;">أمي</div>
+    </section>
+
+    <!-- Process Timeline -->
+    <section id="process" class="py-20 bg-forensic-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div>
-                    <b>أمي الغالية ❤️</b><br>
-                    <span style="color: gray; font-size: 12px;">ليش ما ترد يمة؟ قلبي نار</span>
+                    <h2 class="text-3xl font-bold text-white mb-6 font-tajawal border-r-4 border-forensic-accent pr-4">منهجية العمل</h2>
+                    <p class="text-slate-400 mb-8 leading-loose">
+                        نتبع بروتوكولات صارمة متوافقة مع المعايير الدولية (ISO 17025) لضمان نزاهة الأدلة منذ لحظة رفعها من مسرح الجريمة وحتى تقديم التقرير النهائي للمحكمة.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex group">
+                            <div class="flex-shrink-0 ml-4 flex flex-col items-center">
+                                <div class="w-8 h-8 rounded-full bg-forensic-accent flex items-center justify-center text-forensic-dark font-bold">1</div>
+                                <div class="h-full w-0.5 bg-slate-700 my-2 group-hover:bg-forensic-accent transition-colors"></div>
+                            </div>
+                            <div class="pb-8">
+                                <h4 class="text-lg font-bold text-white">جمع وتوثيق الأدلة</h4>
+                                <p class="text-slate-400 text-sm mt-2">استخدام أدوات معقمة وطرق رفع حديثة لضمان عدم تلوث العينة.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex group">
+                            <div class="flex-shrink-0 ml-4 flex flex-col items-center">
+                                <div class="w-8 h-8 rounded-full bg-slate-700 text-slate-300 group-hover:bg-forensic-accent group-hover:text-forensic-dark transition-all flex items-center justify-center font-bold">2</div>
+                                <div class="h-full w-0.5 bg-slate-700 my-2 group-hover:bg-forensic-accent transition-colors"></div>
+                            </div>
+                            <div class="pb-8">
+                                <h4 class="text-lg font-bold text-white">التحليل المخبري</h4>
+                                <p class="text-slate-400 text-sm mt-2">إجراء الفحوصات الكيميائية والبيولوجية والرقمية باستخدام أجهزة متطورة.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex group">
+                            <div class="flex-shrink-0 ml-4 flex flex-col items-center">
+                                <div class="w-8 h-8 rounded-full bg-slate-700 text-slate-300 group-hover:bg-forensic-accent group-hover:text-forensic-dark transition-all flex items-center justify-center font-bold">3</div>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-white">إصدار التقرير الفني</h4>
+                                <p class="text-slate-400 text-sm mt-2">كتابة تقرير مفصل يتضمن النتائج والاستنتاجات العلمية لتقديمه للجهات القضائية.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Visual Element -->
+                <div class="relative h-96 rounded-xl overflow-hidden border border-slate-700 shadow-2xl">
+                     <img src="https://images.unsplash.com/photo-1579154204601-01588f351e67?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Forensic Lab" class="absolute inset-0 w-full h-full object-cover opacity-60 hover:opacity-80 transition-opacity duration-500">
+                     <div class="absolute bottom-0 w-full bg-gradient-to-t from-slate-900 to-transparent p-6">
+                         <div class="flex items-center gap-2 text-forensic-accent font-mono text-sm">
+                             <span class="animate-pulse">●</span> SYSTEM ONLINE
+                         </div>
+                     </div>
                 </div>
             </div>
-            <div style="display: flex; flex-direction: column;">
-                <div class="msg-bubble msg-out">طالع للشغل يمة، لا تخافين.</div>
-                <div class="msg-bubble msg-in">دير بالك، سمعت اكو مشاكل بالمنطقة.</div>
-                <div class="msg-bubble msg-in">اكو واحد سأل عليك اليوم، شكله غريب لابس اسود.</div>
-                <div class="msg-bubble msg-out">منو هذا؟ شيريد؟</div>
-                <div class="msg-bubble msg-in">ما ادري يمة، بس كال "الكود القديم" وتاريخ ميلادك 1998.</div>
-                <div class="msg-bubble msg-out">شنو؟؟ 1998؟ يمة قفلي الباب زين!!</div>
-            </div>
         </div>
-    </div>
+    </section>
 
-    <div id="app-files" class="app-window" style="background: #222; color: white;">
-        <div class="app-header" style="background: #333; color: red;">
-            <i class="fas fa-times" onclick="goHome()"></i> سري للغاية (Top Secret)
-        </div>
-        <div class="app-content" style="text-align: center; padding-top: 50px;">
-            <i class="fas fa-file-contract" style="font-size: 60px; color: red; margin-bottom: 20px;"></i>
-            <h3>بيانات المشروع X</h3>
-            <p>هذا الملف محمي بكلمة مرور مشفرة</p>
-            <input type="password" id="secret-pass" placeholder="أدخل الكود السري" style="padding: 10px; width: 80%; margin-top: 20px; text-align: center;">
-            <button onclick="unlockSecret()" style="margin-top: 10px; padding: 10px 20px; background: red; color: white; border: none; cursor: pointer;">فتح التشفير</button>
-            <p style="font-size: 12px; color: gray; margin-top: 20px;">تلميح: ذكرته أمي في الرسائل</p>
-        </div>
-    </div>
-
-    <div id="app-voice" class="app-window">
-        <div class="app-header">
-            <i class="fas fa-arrow-right" onclick="goHome()"></i> التسجيلات
-        </div>
-        <div class="app-content">
-            <div class="secret-file" onclick="playVoice('rec1')" style="background: white; border: 1px solid #ddd; color: black; display: flex; justify-content: space-between;">
-                <span>تسجيل #1 - البداية</span> <i class="fas fa-play"></i>
-            </div>
-            <div class="secret-file" onclick="playVoice('rec2')" style="background: white; border: 1px solid #ddd; color: black; display: flex; justify-content: space-between;">
-                <span>تسجيل #2 - المطاردة</span> <i class="fas fa-play"></i>
-            </div>
-        </div>
-    </div>
-
-    <div id="app-notes" class="app-window">
-        <div class="app-header">
-            <i class="fas fa-arrow-right" onclick="goHome()"></i> مذكراتي
-        </div>
-        <div class="app-content">
-            <div style="background: #fffbe6; padding: 15px; margin-bottom: 10px; border: 1px solid #eee;">
-                <b>قائمة مهام:</b><br>
-                1. مسح الهارد ديسك.<br>
-                2. تغيير مكان السكن.<br>
-                3. الاتصال بـ "العميل" وتسليمه الكود (1998).
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<script>
-    /* --- 1. المنطق الأساسي للعبة --- */
-    let isPhoneUnlocked = false;
-    let mysterySolved = false;
-
-    // فتح القفل (اللغز الأول: رمز بسيط)
-    // سنجعل الرمز 0000 للسهولة في البداية ليدخل اللاعب، لكن الأهم هو الألغاز بالداخل
-    function checkPass() {
-        const pass = document.getElementById('pass-code').value;
-        if(pass === '1998') { // جعلته نفس تاريخ الميلاد لربط القصة
-            unlockPhone();
-        } else if (pass === '0000') {
-             alert("هذا الرمز الافتراضي.. لكن سامر غيره! ابحث عن تاريخ ميلاده.");
-        } else {
-            document.getElementById('pass-code').style.border = "2px solid red";
-            navigator.vibrate(200);
-        }
-    }
-
-    function unlockPhone() {
-        document.getElementById('lock-screen').style.display = 'none';
-        document.getElementById('home-screen').style.display = 'flex';
-        isPhoneUnlocked = true;
-        // بدء المؤقت للاتصال المرعب
-        setTimeout(triggerIncomingCall, 15000); // بعد 15 ثانية
-    }
-
-    function goHome() {
-        const apps = document.querySelectorAll('.app-window');
-        apps.forEach(app => app.style.display = 'none');
-    }
-
-    function openApp(id) {
-        document.getElementById('app-' + id).style.display = 'flex';
-    }
-
-    /* --- 2. نظام الاتصال المرعب --- */
-    function triggerIncomingCall() {
-        if(!mysterySolved) {
-            document.getElementById('incoming-call').style.display = 'flex';
-            // صوت رنين وهمي (اهتزاز)
-            navigator.vibrate([500, 200, 500, 200, 500]);
-        }
-    }
-
-    function rejectCall() {
-        document.getElementById('incoming-call').style.display = 'none';
-        alert("لا يمكنك الهروب... سيتصلون مجدداً.");
-        setTimeout(triggerIncomingCall, 10000);
-    }
-
-    function acceptCall() {
-        document.getElementById('incoming-call').style.display = 'none';
-        // تشغيل صوت مرعب باستخدام Text-to-Speech
-        const msg = new SpeechSynthesisUtterance("Listen to me carefully. They know you have the phone. Do not open the secret file.");
-        msg.lang = 'en-US';
-        msg.pitch = 0.5; // صوت غليظ
-        msg.rate = 0.8; // بطيء
-        window.speechSynthesis.speak(msg);
-        
-        // تأثير تشويش الشاشة
-        document.getElementById('phone-frame').classList.add('glitch');
-        setTimeout(() => document.getElementById('phone-frame').classList.remove('glitch'), 2000);
-    }
-
-    /* --- 3. نظام الصور والأدلة --- */
-    function viewPhoto(type) {
-        const viewer = document.getElementById('photo-viewer');
-        const img = document.getElementById('full-img');
-        const desc = document.getElementById('photo-desc');
-        
-        viewer.style.display = 'flex';
-        
-        if(type === 'id') {
-            img.src = 'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?w=400';
-            desc.innerHTML = "هوية: سامر كمال<br>الميلاد: <b>1998</b><br>(تذكر هذا التاريخ!)";
-        } else {
-            img.src = 'https://images.unsplash.com/photo-1481349518771-20055b2a7b24?w=400';
-            desc.innerHTML = "صورة عشوائية.. لا تبدو مهمة.";
-        }
-    }
-
-    function closePhoto() {
-        document.getElementById('photo-viewer').style.display = 'none';
-    }
-
-    /* --- 4. فك تشفير الملف السري --- */
-    function unlockSecret() {
-        const pass = document.getElementById('secret-pass').value;
-        if(pass === '1998') {
-            document.getElementById('app-files').innerHTML = `
-                <div style="padding:20px; text-align:center; color:white;">
-                    <h1 style="color:#2ecc71;">تم الوصول!</h1>
-                    <p>لقد وجدت ملفات سامر المسروقة.</p>
-                    <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=300" style="border-radius:10px; margin:20px 0;">
-                    <p>أنت الآن في خطر... تخلص من الهاتف فوراً!</p>
-                    <button onclick="location.reload()" style="background:red; color:white; border:none; padding:15px; border-radius:10px;">إنهاء اللعبة</button>
+    <!-- Footer -->
+    <footer id="contact" class="bg-slate-950 text-slate-400 py-12 border-t border-slate-800 font-tajawal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="col-span-1 md:col-span-2">
+                <div class="flex items-center gap-2 mb-4">
+                    <i class="fa-solid fa-shield-halved text-2xl text-forensic-accent"></i>
+                    <h3 class="text-white text-xl font-bold">وحدة الأدلة الجنائية</h3>
                 </div>
-            `;
-            mysterySolved = true;
-        } else {
-            alert("رمز خاطئ! حاول البحث في الرسائل والصور.");
-            document.getElementById('phone-frame').classList.add('glitch'); // عقوبة
-            setTimeout(() => document.getElementById('phone-frame').classList.remove('glitch'), 500);
+                <p class="text-sm max-w-sm mb-6">
+                    مؤسسة رائدة في مجال العلوم الجنائية، نسعى لتحقيق العدالة من خلال تطبيق أحدث المعايير العلمية في تحليل الأدلة.
+                </p>
+                <div class="flex gap-4">
+                    <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-forensic-accent hover:text-forensic-dark transition-colors"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-forensic-accent hover:text-forensic-dark transition-colors"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            
+            <div>
+                <h4 class="text-white font-bold mb-4">روابط سريعة</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="hover:text-forensic-accent transition-colors">عن المختبر</a></li>
+                    <li><a href="#" class="hover:text-forensic-accent transition-colors">الأسئلة الشائعة</a></li>
+                    <li><a href="#" class="hover:text-forensic-accent transition-colors">سياسة الخصوصية</a></li>
+                    <li><a href="#" class="hover:text-forensic-accent transition-colors">طلب تدريب</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold mb-4">تواصل معنا</h4>
+                <ul class="space-y-3 text-sm">
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-location-dot text-forensic-accent"></i> المبنى الرئيسي، المنطقة الأمنية</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-phone text-forensic-accent"></i> 999-FORENSIC</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-envelope text-forensic-accent"></i> info@forensics-lab.iq</li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-slate-900 text-center text-xs">
+            <p>&copy; 2024 وحدة الأدلة الجنائية. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle Mobile Menu
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
         }
-    }
 
-    /* --- 5. مشغل الصوتيات (Text to Speech) --- */
-    function playVoice(id) {
-        let text = "";
-        if(id === 'rec1') text = "اسمي سامر. اليوم 10 اكتوبر. لقيت ثغرة بنظام البنك. اعتقد كشفوني.";
-        if(id === 'rec2') text = "جاي يلاحقوني سيارة سوداء. راح اضم الموبايل وارمي الشريحة. اذا تسمع هذا التسجيل، بلغ الشرطة.";
-        
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'ar-SA'; // لهجة عربية
-        window.speechSynthesis.speak(utterance);
-    }
+        // Simulate Case Status Check
+        function checkStatus() {
+            const input = document.getElementById('caseInput');
+            const result = document.getElementById('resultArea');
+            const btn = document.querySelector('button[onclick="checkStatus()"]');
+            
+            if(input.value.trim() === "") {
+                alert("الرجاء إدخال رقم القضية");
+                return;
+            }
 
-</script>
+            // Loading state
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin ml-2"></i> جاري البحث...';
+            btn.disabled = true;
+            result.classList.add('hidden');
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                result.classList.remove('hidden');
+                // Scroll to result slightly if needed
+            }, 1500);
+        }
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-lg');
+                navbar.classList.replace('bg-opacity-70', 'bg-opacity-95');
+            } else {
+                navbar.classList.remove('shadow-lg');
+            }
+        });
+    </script>
 </body>
 </html>
+
