@@ -3,412 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مركز الأدلة الجنائية والتحقيقات الرقمية</title>
-    <!-- Tailwind CSS -->
+    <title>دجلة AI - النسخة المطورة</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;400;600;700&family=Tajawal:wght@300;500;800&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        forensic: {
-                            dark: '#0f172a',
-                            light: '#1e293b',
-                            accent: '#38bdf8', // Light Blue
-                            alert: '#eab308', // Crime Scene Yellow
-                        }
-                    },
-                    fontFamily: {
-                        cairo: ['Cairo', 'sans-serif'],
-                        tajawal: ['Tajawal', 'sans-serif'],
-                    },
-                    animation: {
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'scan': 'scan 2s linear infinite',
-                    },
-                    keyframes: {
-                        scan: {
-                            '0%': { transform: 'translateY(-100%)' },
-                            '100%': { transform: 'translateY(100%)' }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Changa:wght@300;400;700&display=swap');
         body {
-            font-family: 'Cairo', sans-serif;
-            scroll-behavior: smooth;
+            font-family: 'Changa', sans-serif;
+            background-color: #f8fafc;
         }
-        .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .chat-window {
+            height: calc(100vh - 180px);
         }
-        .fingerprint-bg {
-            background-image: url('https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'); /* Tech/Code background as abstraction */
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+        .user-msg {
+            background: #065f46;
+            color: white;
+            border-radius: 18px 18px 0 18px;
         }
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+        .bot-msg {
+            background: white;
+            color: #1e293b;
+            border-radius: 18px 18px 18px 0;
+            border: 1px solid #e2e8f0;
         }
-        ::-webkit-scrollbar-track {
-            background: #0f172a;
+        .loading-dots span {
+            animation: blink 1.4s infinite both;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #38bdf8;
-            border-radius: 4px;
-        }
-        .scan-line {
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            background: #38bdf8;
-            box-shadow: 0 0 10px #38bdf8;
-            opacity: 0.5;
-            top: 0;
-            left: 0;
-            animation: scan 3s linear infinite;
-            pointer-events: none;
+        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes blink {
+            0% { opacity: 0.2; }
+            20% { opacity: 1; }
+            100% { opacity: 0.2; }
         }
     </style>
 </head>
-<body class="bg-forensic-dark text-slate-200 overflow-x-hidden">
+<body class="flex flex-col h-screen">
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 glass-panel border-b border-slate-700 transition-all duration-300" id="navbar">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex items-center gap-3">
-                    <i class="fa-solid fa-fingerprint text-4xl text-forensic-accent animate-pulse-slow"></i>
-                    <div>
-                        <h1 class="text-xl font-bold text-white tracking-wider font-tajawal">وحدة الأدلة الجنائية</h1>
-                        <p class="text-xs text-slate-400">Forensic Evidence Unit</p>
-                    </div>
-                </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4 space-x-reverse">
-                        <a href="#home" class="hover:text-forensic-accent px-3 py-2 rounded-md text-sm font-medium transition-colors">الرئيسية</a>
-                        <a href="#services" class="hover:text-forensic-accent px-3 py-2 rounded-md text-sm font-medium transition-colors">الأقسام</a>
-                        <a href="#process" class="hover:text-forensic-accent px-3 py-2 rounded-md text-sm font-medium transition-colors">مراحل التحقيق</a>
-                        <a href="#status" class="bg-forensic-accent text-forensic-dark px-4 py-2 rounded-full font-bold hover:bg-white transition-all transform hover:scale-105">متابعة قضية</a>
-                    </div>
-                </div>
-                <!-- Mobile menu button -->
-                <div class="md:hidden">
-                    <button onclick="toggleMenu()" class="text-slate-300 hover:text-white focus:outline-none">
-                        <i class="fa-solid fa-bars text-2xl"></i>
-                    </button>
-                </div>
+    <!-- Header -->
+    <header class="bg-white border-b p-4 flex justify-between items-center shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white shadow-lg">
+                <i class="fas fa-brain text-lg"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-gray-800 text-lg leading-tight">دجلة AI</h1>
+                <p class="text-xs text-green-600">الذكاء العراقي الأصلي 🇮🇶</p>
             </div>
         </div>
-        <!-- Mobile Menu Panel -->
-        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-t border-slate-700">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
-                <a href="#home" class="block hover:bg-slate-800 px-3 py-2 rounded-md text-base font-medium">الرئيسية</a>
-                <a href="#services" class="block hover:bg-slate-800 px-3 py-2 rounded-md text-base font-medium">الأقسام</a>
-                <a href="#process" class="block hover:bg-slate-800 px-3 py-2 rounded-md text-base font-medium">مراحل التحقيق</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <header id="home" class="relative h-screen flex items-center justify-center fingerprint-bg">
-        <div class="absolute inset-0 bg-slate-900/80"></div> <!-- Overlay -->
-        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
-            <div class="inline-block mb-4 px-4 py-1 border border-forensic-alert text-forensic-alert rounded-full text-sm font-bold tracking-widest uppercase bg-forensic-alert/10 backdrop-blur-sm">
-                الدقة • العلم • العدالة
-            </div>
-            <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 font-tajawal leading-tight">
-                كشف الحقيقة <span class="text-forensic-accent">بالدليل العلمي</span>
-            </h1>
-            <p class="text-xl md:text-2xl text-slate-300 mb-10 font-light max-w-2xl mx-auto">
-                نستخدم أحدث التقنيات المخبرية والرقمية لتحليل مسرح الجريمة وتقديم أدلة لا تقبل الشك.
-            </p>
-            <div class="flex flex-col md:flex-row gap-4 justify-center">
-                <a href="#services" class="bg-forensic-accent text-forensic-dark px-8 py-4 rounded-lg font-bold text-lg hover:bg-white transition-all shadow-lg shadow-forensic-accent/20">
-                    استعراض الخدمات
-                </a>
-                <a href="#contact" class="border border-slate-400 text-slate-200 px-8 py-4 rounded-lg font-bold text-lg hover:bg-slate-800/50 hover:border-white transition-all">
-                    تواصل معنا
-                </a>
-            </div>
-        </div>
-        
-        <!-- Decoration: Scanning Line animation -->
-        <div class="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
-            <div class="scan-line"></div>
+        <div class="bg-gray-100 px-3 py-1 rounded-full text-xs text-gray-500 font-medium">
+            <i class="fas fa-signal text-green-500 mr-1"></i> متصل
         </div>
     </header>
 
-    <!-- Services Section -->
-    <section id="services" class="py-20 bg-forensic-dark relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 font-tajawal">أقسام المختبر الجنائي</h2>
-                <div class="h-1 w-20 bg-forensic-accent mx-auto rounded-full"></div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Card 1 -->
-                <div class="bg-slate-800/50 p-8 rounded-xl border border-slate-700 hover:border-forensic-accent transition-all duration-300 group hover:-translate-y-2">
-                    <div class="w-14 h-14 bg-forensic-accent/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-forensic-accent transition-colors">
-                        <i class="fa-solid fa-dna text-2xl text-forensic-accent group-hover:text-forensic-dark"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3">تحليل الحمض النووي (DNA)</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">
-                        استخلاص ومطابقة البصمة الوراثية بأحدث التقنيات لتحديد الهوية والعلاقات البيولوجية بدقة متناهية.
-                    </p>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="bg-slate-800/50 p-8 rounded-xl border border-slate-700 hover:border-forensic-accent transition-all duration-300 group hover:-translate-y-2">
-                    <div class="w-14 h-14 bg-forensic-accent/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-forensic-accent transition-colors">
-                        <i class="fa-solid fa-laptop-code text-2xl text-forensic-accent group-hover:text-forensic-dark"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3">الأدلة الجنائية الرقمية</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">
-                        استرجاع البيانات المحذوفة، تحليل الهواتف والحواسيب، وتتبع الجرائم الإلكترونية والاختراقات.
-                    </p>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="bg-slate-800/50 p-8 rounded-xl border border-slate-700 hover:border-forensic-accent transition-all duration-300 group hover:-translate-y-2">
-                    <div class="w-14 h-14 bg-forensic-accent/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-forensic-accent transition-colors">
-                        <i class="fa-solid fa-flask text-2xl text-forensic-accent group-hover:text-forensic-dark"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3">السموم والمخدرات</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">
-                        تحليل العينات البيولوجية للكشف عن وجود السموم، المخدرات، أو المواد الكيميائية الضارة.
-                    </p>
-                </div>
-
-                <!-- Card 4 -->
-                <div class="bg-slate-800/50 p-8 rounded-xl border border-slate-700 hover:border-forensic-accent transition-all duration-300 group hover:-translate-y-2">
-                    <div class="w-14 h-14 bg-forensic-accent/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-forensic-accent transition-colors">
-                        <i class="fa-solid fa-fingerprint text-2xl text-forensic-accent group-hover:text-forensic-dark"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3">البصمات وآثار الأسلحة</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">
-                        مظاهات البصمات المرفوعة من مسرح الجريمة وفحص المقذوفات النارية لتحديد نوع السلاح المستخدم.
-                    </p>
-                </div>
-
-                <!-- Card 5 -->
-                <div class="bg-slate-800/50 p-8 rounded-xl border border-slate-700 hover:border-forensic-accent transition-all duration-300 group hover:-translate-y-2">
-                    <div class="w-14 h-14 bg-forensic-accent/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-forensic-accent transition-colors">
-                        <i class="fa-solid fa-file-contract text-2xl text-forensic-accent group-hover:text-forensic-dark"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3">فحص التزييف والتزوير</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">
-                        كشف التلاعب في المستندات الرسمية، العملات، والتواقيع باستخدام الأشعة والميكروسكوبات المتطورة.
-                    </p>
-                </div>
-
-                <!-- Card 6 -->
-                <div class="bg-slate-800/50 p-8 rounded-xl border border-slate-700 hover:border-forensic-accent transition-all duration-300 group hover:-translate-y-2">
-                    <div class="w-14 h-14 bg-forensic-accent/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-forensic-accent transition-colors">
-                        <i class="fa-solid fa-camera-retro text-2xl text-forensic-accent group-hover:text-forensic-dark"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3">تصوير مسرح الجريمة</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">
-                        توثيق دقيق لمسرح الجريمة بتقنيات 3D والمسح الليزري لضمان عدم ضياع أي دليل مهما كان صغيراً.
-                    </p>
-                </div>
+    <!-- Chat Space -->
+    <main id="chat-container" class="chat-window overflow-y-auto p-4 space-y-4">
+        <div class="flex justify-start">
+            <div class="bot-msg p-4 max-w-[85%] shadow-sm">
+                هلا بيك عيوني! اني دجلة، آمرني شمحتاج؟ تريد أصمم لك صورة؟ لو أسمعك صوتي؟ لو نسولف؟ تدلل!
             </div>
         </div>
-    </section>
+    </main>
 
-    <!-- Case Status Section (Interactive) -->
-    <section id="status" class="py-20 bg-slate-900 border-y border-slate-800">
-        <div class="max-w-4xl mx-auto px-4">
-            <div class="glass-panel p-8 md:p-12 rounded-2xl text-center relative overflow-hidden">
-                
-                <!-- Decoration -->
-                <div class="absolute top-0 right-0 w-32 h-32 bg-forensic-accent/10 blur-3xl rounded-full"></div>
-                <div class="absolute bottom-0 left-0 w-32 h-32 bg-forensic-alert/10 blur-3xl rounded-full"></div>
-
-                <i class="fa-solid fa-magnifying-glass-chart text-5xl text-slate-500 mb-6 block mx-auto"></i>
-                
-                <h2 class="text-3xl font-bold text-white mb-2 font-tajawal">نظام تتبع القضايا</h2>
-                <p class="text-slate-400 mb-8">أدخل الرقم المرجعي للقضية (Case ID) لمعرفة حالة التحليل المخبري.</p>
-                
-                <div class="max-w-lg mx-auto bg-slate-800 p-2 rounded-lg flex flex-col sm:flex-row gap-2 border border-slate-700">
-                    <input type="text" id="caseInput" placeholder="مثال: CR-2024-8892" class="flex-1 bg-transparent text-white px-4 py-3 outline-none placeholder-slate-500 text-center sm:text-right font-mono">
-                    <button onclick="checkStatus()" class="bg-forensic-accent text-forensic-dark font-bold px-8 py-3 rounded-md hover:bg-white transition-colors">
-                        <i class="fa-solid fa-search ml-2"></i> بحث
-                    </button>
-                </div>
-
-                <!-- Result Area -->
-                <div id="resultArea" class="hidden mt-8 p-4 bg-slate-800/80 rounded-lg border-r-4 border-forensic-alert text-right animate-pulse">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-xs text-slate-400">حالة القضية</p>
-                            <p class="text-lg font-bold text-forensic-alert mt-1"><i class="fa-solid fa-flask ml-2"></i> قيد التحليل المخبري</p>
-                        </div>
-                        <div class="text-left">
-                            <p class="text-xs text-slate-400">تاريخ الاستلام</p>
-                            <p class="text-sm font-mono text-white">2023-10-24</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Loading Area -->
+    <div id="status-indicator" class="hidden px-6 py-2">
+        <div class="text-xs text-gray-400 loading-dots">
+            دجلة ديحضر الرد <span>.</span><span>.</span><span>.</span>
         </div>
-    </section>
+    </div>
 
-    <!-- Process Timeline -->
-    <section id="process" class="py-20 bg-forensic-dark">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div>
-                    <h2 class="text-3xl font-bold text-white mb-6 font-tajawal border-r-4 border-forensic-accent pr-4">منهجية العمل</h2>
-                    <p class="text-slate-400 mb-8 leading-loose">
-                        نتبع بروتوكولات صارمة متوافقة مع المعايير الدولية (ISO 17025) لضمان نزاهة الأدلة منذ لحظة رفعها من مسرح الجريمة وحتى تقديم التقرير النهائي للمحكمة.
-                    </p>
-                    
-                    <div class="space-y-6">
-                        <div class="flex group">
-                            <div class="flex-shrink-0 ml-4 flex flex-col items-center">
-                                <div class="w-8 h-8 rounded-full bg-forensic-accent flex items-center justify-center text-forensic-dark font-bold">1</div>
-                                <div class="h-full w-0.5 bg-slate-700 my-2 group-hover:bg-forensic-accent transition-colors"></div>
-                            </div>
-                            <div class="pb-8">
-                                <h4 class="text-lg font-bold text-white">جمع وتوثيق الأدلة</h4>
-                                <p class="text-slate-400 text-sm mt-2">استخدام أدوات معقمة وطرق رفع حديثة لضمان عدم تلوث العينة.</p>
-                            </div>
-                        </div>
-
-                        <div class="flex group">
-                            <div class="flex-shrink-0 ml-4 flex flex-col items-center">
-                                <div class="w-8 h-8 rounded-full bg-slate-700 text-slate-300 group-hover:bg-forensic-accent group-hover:text-forensic-dark transition-all flex items-center justify-center font-bold">2</div>
-                                <div class="h-full w-0.5 bg-slate-700 my-2 group-hover:bg-forensic-accent transition-colors"></div>
-                            </div>
-                            <div class="pb-8">
-                                <h4 class="text-lg font-bold text-white">التحليل المخبري</h4>
-                                <p class="text-slate-400 text-sm mt-2">إجراء الفحوصات الكيميائية والبيولوجية والرقمية باستخدام أجهزة متطورة.</p>
-                            </div>
-                        </div>
-
-                        <div class="flex group">
-                            <div class="flex-shrink-0 ml-4 flex flex-col items-center">
-                                <div class="w-8 h-8 rounded-full bg-slate-700 text-slate-300 group-hover:bg-forensic-accent group-hover:text-forensic-dark transition-all flex items-center justify-center font-bold">3</div>
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-bold text-white">إصدار التقرير الفني</h4>
-                                <p class="text-slate-400 text-sm mt-2">كتابة تقرير مفصل يتضمن النتائج والاستنتاجات العلمية لتقديمه للجهات القضائية.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Visual Element -->
-                <div class="relative h-96 rounded-xl overflow-hidden border border-slate-700 shadow-2xl">
-                     <img src="https://images.unsplash.com/photo-1579154204601-01588f351e67?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Forensic Lab" class="absolute inset-0 w-full h-full object-cover opacity-60 hover:opacity-80 transition-opacity duration-500">
-                     <div class="absolute bottom-0 w-full bg-gradient-to-t from-slate-900 to-transparent p-6">
-                         <div class="flex items-center gap-2 text-forensic-accent font-mono text-sm">
-                             <span class="animate-pulse">●</span> SYSTEM ONLINE
-                         </div>
-                     </div>
-                </div>
+    <!-- Input Area -->
+    <footer class="p-4 bg-white border-t">
+        <div class="max-w-4xl mx-auto flex flex-col gap-2">
+            <div class="flex items-center gap-2">
+                <button onclick="quickRequest('صورة لأسد لابس شماغ')" class="text-[10px] sm:text-xs bg-blue-50 text-blue-600 border border-blue-100 px-3 py-1 rounded-full hover:bg-blue-100">🖼️ سويلي صورة</button>
+                <button onclick="quickRequest('غنيلي طور عراقي حزين')" class="text-[10px] sm:text-xs bg-purple-50 text-purple-600 border border-purple-100 px-3 py-1 rounded-full hover:bg-purple-100">🎤 غنيلي</button>
+                <button onclick="quickRequest('شلونك اليوم؟')" class="text-[10px] sm:text-xs bg-gray-50 text-gray-600 border border-gray-100 px-3 py-1 rounded-full hover:bg-gray-100">💬 سولف وياي</button>
             </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer id="contact" class="bg-slate-950 text-slate-400 py-12 border-t border-slate-800 font-tajawal">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div class="col-span-1 md:col-span-2">
-                <div class="flex items-center gap-2 mb-4">
-                    <i class="fa-solid fa-shield-halved text-2xl text-forensic-accent"></i>
-                    <h3 class="text-white text-xl font-bold">وحدة الأدلة الجنائية</h3>
-                </div>
-                <p class="text-sm max-w-sm mb-6">
-                    مؤسسة رائدة في مجال العلوم الجنائية، نسعى لتحقيق العدالة من خلال تطبيق أحدث المعايير العلمية في تحليل الأدلة.
-                </p>
-                <div class="flex gap-4">
-                    <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-forensic-accent hover:text-forensic-dark transition-colors"><i class="fa-brands fa-twitter"></i></a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-forensic-accent hover:text-forensic-dark transition-colors"><i class="fa-brands fa-linkedin-in"></i></a>
-                </div>
+            <div class="relative flex items-center">
+                <input type="text" id="user-input" 
+                    class="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 pr-4 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all" 
+                    placeholder="أكتب رسالتك هنا عيني...">
+                <button id="send-btn" class="absolute left-2 bg-green-600 text-white w-10 h-10 rounded-xl flex items-center justify-center hover:bg-green-700 shadow-md">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
             </div>
-            
-            <div>
-                <h4 class="text-white font-bold mb-4">روابط سريعة</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="#" class="hover:text-forensic-accent transition-colors">عن المختبر</a></li>
-                    <li><a href="#" class="hover:text-forensic-accent transition-colors">الأسئلة الشائعة</a></li>
-                    <li><a href="#" class="hover:text-forensic-accent transition-colors">سياسة الخصوصية</a></li>
-                    <li><a href="#" class="hover:text-forensic-accent transition-colors">طلب تدريب</a></li>
-                </ul>
-            </div>
-
-            <div>
-                <h4 class="text-white font-bold mb-4">تواصل معنا</h4>
-                <ul class="space-y-3 text-sm">
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-location-dot text-forensic-accent"></i> المبنى الرئيسي، المنطقة الأمنية</li>
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-phone text-forensic-accent"></i> 999-FORENSIC</li>
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-envelope text-forensic-accent"></i> info@forensics-lab.iq</li>
-                </ul>
-            </div>
-        </div>
-        <div class="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-slate-900 text-center text-xs">
-            <p>&copy; 2024 وحدة الأدلة الجنائية. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
 
     <script>
-        // Toggle Mobile Menu
-        function toggleMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        }
+        const apiKey = ""; // API Key placeholder
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const statusIndicator = document.getElementById('status-indicator');
 
-        // Simulate Case Status Check
-        function checkStatus() {
-            const input = document.getElementById('caseInput');
-            const result = document.getElementById('resultArea');
-            const btn = document.querySelector('button[onclick="checkStatus()"]');
+        const SYSTEM_PROMPT = `
+            أنت ذكاء اصطناعي عراقي ودود جداً اسمك "دجلة AI". 
+            يجب أن تتحدث دائماً باللهجة العراقية (شلونك، عيوني، تدلل، صار، من رخصتك).
             
-            if(input.value.trim() === "") {
-                alert("الرجاء إدخال رقم القضية");
-                return;
-            }
+            القواعد المهمة:
+            1. إذا طلب المستخدم صورة: يجب أن تبدأ ردك بكلمة [IMAGE_PROMPT] ثم اكتب وصفاً دقيقاً للصورة باللغة الإنجليزية.
+            2. إذا طلب المستخدم أغنية، مقطع صوتي، أو أن تقول شيئاً بصوتك: يجب أن تبدأ ردك بكلمة [AUDIO_TEXT] ثم اكتب الكلام الذي تريد نطقه باللهجة العراقية.
+            3. لا تستخدم الفصحى أبداً.
+            4. كن مرحاً ومحباً للثقافة العراقية.
+        `;
 
-            // Loading state
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin ml-2"></i> جاري البحث...';
-            btn.disabled = true;
-            result.classList.add('hidden');
-
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                result.classList.remove('hidden');
-                // Scroll to result slightly if needed
-            }, 1500);
+        async function callGemini(prompt) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }],
+                    systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] }
+                })
+            });
+            const data = await response.json();
+            return data.candidates[0].content.parts[0].text;
         }
 
-        // Navbar Scroll Effect
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('shadow-lg');
-                navbar.classList.replace('bg-opacity-70', 'bg-opacity-95');
+        async function generateImage(englishPrompt) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`;
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    instances: { prompt: englishPrompt },
+                    parameters: { sampleCount: 1 }
+                })
+            });
+            const data = await response.json();
+            return `data:image/png;base64,${data.predictions[0].bytesBase64Encoded}`;
+        }
+
+        async function generateAudio(textToSpeak) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: textToSpeak }] }],
+                    generationConfig: {
+                        responseModalities: ["AUDIO"],
+                        speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Kore" } } }
+                    }
+                })
+            });
+            const data = await response.json();
+            const pcmBase64 = data.candidates[0].content.parts[0].inlineData.data;
+            return pcmToWav(pcmBase64, 24000); // Kore usually works at 24kHz
+        }
+
+        function pcmToWav(base64Pcm, sampleRate) {
+            const pcmData = Uint8Array.from(atob(base64Pcm), c => c.charCodeAt(0));
+            const buffer = new ArrayBuffer(44 + pcmData.length);
+            const view = new DataView(buffer);
+            const writeString = (offset, string) => {
+                for (let i = 0; i < string.length; i++) view.setUint8(offset + i, string.charCodeAt(i));
+            };
+            writeString(0, 'RIFF');
+            view.setUint32(4, 32 + pcmData.length, true);
+            writeString(8, 'WAVE');
+            writeString(12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, 1, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * 2, true);
+            view.setUint16(32, 2, true);
+            view.setUint16(34, 16, true);
+            writeString(36, 'data');
+            view.setUint32(40, pcmData.length, true);
+            new Uint8Array(buffer, 44).set(pcmData);
+            return URL.createObjectURL(new Blob([buffer], { type: 'audio/wav' }));
+        }
+
+        function addMessage(type, content, extra = null) {
+            const wrapper = document.createElement('div');
+            wrapper.className = `flex ${type === 'user' ? 'justify-end' : 'justify-start'}`;
+            
+            let html = '';
+            if (extra === 'image') {
+                html = `<div class="bot-msg p-2 shadow-md max-w-[85%]">
+                            <img src="${content}" class="rounded-lg mb-2 w-full h-auto">
+                            <p class="text-xs text-gray-400 text-center">هاي الصورة اللي ردتها عيوني</p>
+                        </div>`;
+            } else if (extra === 'audio') {
+                html = `<div class="bot-msg p-4 shadow-md max-w-[85%]">
+                            <p class="mb-3 text-sm">تفضل اسمع المقطع عيني:</p>
+                            <audio controls src="${content}" class="w-full h-10"></audio>
+                        </div>`;
             } else {
-                navbar.classList.remove('shadow-lg');
+                html = `<div class="${type === 'user' ? 'user-msg' : 'bot-msg'} p-4 shadow-sm max-w-[85%]">
+                            ${content}
+                        </div>`;
             }
-        });
+
+            wrapper.innerHTML = html;
+            chatContainer.appendChild(wrapper);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        async function processInput() {
+            const val = userInput.value.trim();
+            if (!val) return;
+
+            addMessage('user', val);
+            userInput.value = '';
+            statusIndicator.classList.remove('hidden');
+
+            try {
+                const responseText = await callGemini(val);
+
+                if (responseText.includes('[IMAGE_PROMPT]')) {
+                    const prompt = responseText.split('[IMAGE_PROMPT]')[1].trim();
+                    const imageUrl = await generateImage(prompt);
+                    addMessage('bot', imageUrl, 'image');
+                } else if (responseText.includes('[AUDIO_TEXT]')) {
+                    const text = responseText.split('[AUDIO_TEXT]')[1].trim();
+                    const audioUrl = await generateAudio(text);
+                    addMessage('bot', audioUrl, 'audio');
+                } else {
+                    addMessage('bot', responseText);
+                }
+            } catch (err) {
+                console.error(err);
+                addMessage('bot', "صار عندي خلل بالسيرفر، حاول مرة ثانية عيني.");
+            } finally {
+                statusIndicator.classList.add('hidden');
+            }
+        }
+
+        function quickRequest(text) {
+            userInput.value = text;
+            processInput();
+        }
+
+        sendBtn.addEventListener('click', processInput);
+        userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') processInput(); });
     </script>
 </body>
 </html>
-
